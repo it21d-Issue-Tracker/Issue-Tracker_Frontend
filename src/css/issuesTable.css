@@ -1,36 +1,89 @@
 .issue-list {
-    width: 100%;
+    width: 80%;
     height: 100%;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
 }
 
 .issue-list table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0 8px; /* separació entre files */
+    table-layout: fixed;   /* ✨ fix per a respectar amplades */
 }
 
+.issue-list thead th {
+    background-color: white;
+    color: #70728f;
+    font-weight: bold;
+    padding: 10px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Files */
+.issue-list tbody tr {
+    background-color: #f9f9fb;
+    border-radius: 8px;
+}
+
+.issue-list tbody tr td {
+    padding: 10px;
+    text-align: center;
+    vertical-align: middle;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Amplades per columna (% respecte del total - ajusta segons calgui) */
+.issue-list thead th:nth-child(1),
+.issue-list tbody td:nth-child(1) { width: 9%; }
+
+.issue-list thead th:nth-child(2),
+.issue-list tbody td:nth-child(2) { width: 9%; }
+
+.issue-list thead th:nth-child(3),
+.issue-list tbody td:nth-child(3) { width: 9%; }
+
+.issue-list thead th:nth-child(4) {
+    text-align: center;
+}
+.issue-list tbody td:nth-child(4) {
+    width: 20%;
+    text-align: left;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.issue-list thead th:nth-child(5),
+.issue-list tbody td:nth-child(5) { width: 12%; }
+
+.issue-list thead th:nth-child(6),
+.issue-list tbody td:nth-child(6) { width: 12%; }
+
+.issue-list thead th:nth-child(7),
+.issue-list tbody td:nth-child(7) { width: 12%; }
+
+/* punts de color */
 .dot {
     height: 18px;
     width: 18px;
-    border-radius: 9px;
+    border-radius: 50%;
     display: inline-block;
     margin: 0;
 }
-.status-new {
-    color: black;
+
+/* enllaços dins la columna ISSUE */
+.issue-list tbody tr td:nth-child(4) a {
+    color: #0090ff;
+    text-decoration: underline;
     font-weight: normal;
-    font-size: 14px;
 }
-.assign-avatars img {
-    width: 30px;
-    height: 30px;
-    object-fit: cover;
-    border-radius: 50%;
-}
+
 .text-primary {
-    color: blue;
-}
-.text-muted {
-    color: lightgray;
+    color: #0090ff;
 }
