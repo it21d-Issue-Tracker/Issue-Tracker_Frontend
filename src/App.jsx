@@ -1,10 +1,14 @@
 import './App.css'
+import Sidebar from './components/sidebar'; 
 
 function App() {
     return (
         <>
-            Hello, ASW!
+            <Sidebar />
+            <div className="content">
+                Hello, ASW!
+            </div>
         </>
-    )
+    );
 }
 export default App
