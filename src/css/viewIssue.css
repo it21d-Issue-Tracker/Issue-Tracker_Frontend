@@ -1,4 +1,4 @@
-html, body { /* Aseguramos que html también ocupe toda la altura */
+html, body { 
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -6,55 +6,52 @@ html, body { /* Aseguramos que html también ocupe toda la altura */
     color: #172b4d;
     line-height: 1.5;
     width: 100%;
-    height: 100%; /* Cambiamos min-height a height para forzar la altura */
+    height: 100%;
     overflow-x: hidden;
 }
 
 .content {
-    flex-grow: 1;
-    padding: 0;
-    box-sizing: border-box;
-    width: calc(100vw - 190px); /* Usa viewport width para mayor precisión */
-    display: flex; /* Añadimos flex para controlar la altura del contenido */
-    flex-direction: column; /* Aseguramos que los hijos se apilen verticalmente */
-    min-height: 100vh; /* Para que el contenido ocupe al menos la altura de la ventana */
+    margin-left: 50px; /* igual al ancho de la sidebar */
+    padding: 30px 50px;
+    padding-right: 50px;
+    min-height: 100vh;
     background-color: white;
-
+    display: flex;
+    flex-direction: column;
 }
+
 
 .container {
     display: flex;
-    gap: 0; 
-    padding: 30px 0 30px 0; 
-    align-items: stretch; 
+    gap: 0;
+    padding: 30px 10px 30px 0px;
+    align-items: stretch;
     background-color: white;
-    width: calc(100% - 150px); 
-    max-width: 1500px; 
+    max-width: none; 
     box-sizing: border-box;
-    flex-grow: 1; 
-    width: 100%; 
-
+    flex-grow: 1;
 }
 
 .left-panel {
-    flex-grow: 1; /* Permite que el panel izquierdo crezca y ocupe el espacio restante */
-    padding-right: 50px; /* Puedes mantener un poco de padding si lo deseas */
+    flex-grow: 1; 
+    padding-right: 50px;
+    padding-left: 10px ;
     border-right: 1px solid #f8f6f6;
     display: flex;
     flex-direction: column;
-    width: auto; /* El ancho se ajustará automáticamente */
-    box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+    min-width: 700px; 
+    box-sizing: border-box;
 }
 
 .right-panel {
-    flex-shrink: 0; /* Evita que el panel derecho se encoja */
-    padding-left: 50px; /* Puedes mantener un poco de padding si lo deseas */
-    min-width: 350px;
-    max-width: 500px;
+    flex-shrink: 0;
+    padding-left: 50px;
+    min-width: 300px; 
+    max-width: 400px; 
     background-color: #fff;
     display: flex;
     flex-direction: column;
-    box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+    box-sizing: border-box;
 }
 
 
@@ -81,14 +78,14 @@ html, body { /* Aseguramos que html también ocupe toda la altura */
 
 .issue-meta {
     display: flex;
-    justify-content: flex-end; /* Alinea los elementos a la derecha */
+    justify-content: flex-end; 
     color: #5e6c84;
     font-size: 0.9em;
-    margin-bottom: 10px; /* Reducir el margen inferior si es necesario */
+    margin-bottom: 10px;
 }
 .issue-meta > div {
-    margin-left: 15px; /* Espacio entre el creador y la fecha */
-    text-align: right; /* Alinea el texto a la derecha dentro de cada div */
+    margin-left: 15px; 
+    text-align: right; 
 }
 .description-container {
     margin-bottom: 20px;
@@ -107,7 +104,7 @@ html, body { /* Aseguramos que html también ocupe toda la altura */
     font-family: inherit;
     font-size: inherit;
     line-height: inherit;
-    resize: vertical; /* Permite redimensionar verticalmente */
+    resize: vertical; 
 }
 
 
@@ -117,9 +114,9 @@ html, body { /* Aseguramos que html también ocupe toda la altura */
     display: flex;
     justify-content: space-between;
     min-height: 36px;
-    padding: 0 15px; /* Aumenta el padding horizontal */
+    padding: 0 15px; 
     border-radius: 5px 5px 0 0;
-    margin-bottom: 10px; /* Añade un poco de espacio debajo del encabezado */
+    margin-bottom: 10px; 
 }
 
 .attachments-count {
@@ -137,7 +134,7 @@ html, body { /* Aseguramos que html también ocupe toda la altura */
     padding: 10px;
     margin-bottom: 10px;
     background-color: #f9f9f9;
-    text-align: left; /* Asegura la alineación a la izquierda del texto */
+    text-align: left;
 }
 
 .attachment-item {

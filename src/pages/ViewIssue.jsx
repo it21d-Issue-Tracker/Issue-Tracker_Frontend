@@ -64,28 +64,29 @@ function ViewIssue() {
     }
 
     return (
-        // Eliminamos <div className="content"> externo y usamos directamente el container
+      <div className="content"> 
         <div className="container">
             <div className="left-panel">
                 <div className="issue-header">
-                    <div className="issue-number">#1 string</div>
+                    <div className="issue-number">#{issue.id} {issue.subject}</div>
                     <div className="issue-status">
-                        <span className="status-badge" style={{ backgroundColor: '#70728F' }}>
-                            New
+                        <span className="status-badge" style={{ backgroundColor: issue.estat.color }}>
+                            {issue.estat}
                         </span>
                     </div>
                 </div>
-                <p>ISSUE</p>
+                <p style={{ textAlign: 'left' }}>ISSUE</p>
                 <div className="issue-meta">
                     <div>
-                        Created by 
-                        <br />
-                        17 May 2025 08:02
+                      Created by {issue.creador}
+                      <br />
+                      {formatDate(issue.data_creacio)}
                     </div>
                 </div>
 
                 <div className="description-container">
-                    <label htmlFor="description-input" className="description-label">Description</label>
+                    <label htmlFor="description-input" className="description-label" style={{ textAlign: 'left', display: 'block' }}>Description</label>
+
                     <textarea id="description-input" className="description-textarea" readOnly value="None" />
                 </div>
 
@@ -97,31 +98,32 @@ function ViewIssue() {
                 </div>
 
                 <div className="comments-section">
+                  <button className="active">Comments</button>
                 </div>
             
             </div>
 
             <div className="right-panel">
                 <div className="detail-row">
-                    <div className="detail-label">Type</div>
+                    <div className="detail-label">TYPE</div>
                     <div className="detail-value">
-                        Bug
+                        {issue.tipus}
                         <div className="tag-color" style={{ backgroundColor: '#E44057' }}></div>
                     </div>
                 </div>
 
                 <div className="detail-row">
-                    <div className="detail-label">Severity</div>
+                    <div className="detail-label">SEVERITY</div>
                     <div className="detail-value">
-                        Normal
+                        {issue.gravetat}
                         <div className="tag-color" style={{ backgroundColor: '#40E47C' }}></div>
                     </div>
                 </div>
 
                 <div className="detail-row">
-                    <div className="detail-label">Priority</div>
+                    <div className="detail-label">PRIORITY</div>
                     <div className="detail-value">
-                        Low
+                        {issue.prioritat}
                         <div className="tag-color" style={{ backgroundColor: '#A8E440' }}></div>
                     </div>
                 </div>
@@ -154,6 +156,7 @@ function ViewIssue() {
                 </div>
             </div>
         </div>
+      </div>
     );
 };
 
