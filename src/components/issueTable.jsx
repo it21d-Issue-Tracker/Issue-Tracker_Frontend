@@ -68,7 +68,6 @@ const IssueTable = () => {
         </>
     );
 
-    // Funció auxiliar per trobar l'objecte corresponent a partir del nom
     const findByName = (list, name) => list.find(item => item.name === name);
 
     return (

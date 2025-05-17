@@ -6,29 +6,36 @@ const IssuesMenu = () => {
     const styles = {
         page: {
             display: 'flex',
-            width: '100vw',
+            width: '100%',
             height: '100vh',
-            overflow: 'hidden',
+            marginLeft: '90px'
+
+        },
+        filters: {
+            display: 'fixed',
+            width: '250px',
+            backgroundColor: '#f0f0f0',
+            overflowY: 'hidden',
         },
         issues: {
             flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
+            padding: '20px',
             backgroundColor: '#ffffff',
-            padding: '10px',
-            overflowX: 'auto',
+            overflow: 'hidden',
         },
     };
 
     return (
         <div style={styles.page}>
-            <aside className="sidebar"> <Sidebar/> </aside>
-            <section className="filters">Filtros</section>
+            <Sidebar/>
+            <section style={styles.filters}>
+                Filtros
+            </section>
             <main style={styles.issues}>
                 <IssueTable/>
             </main>
         </div>
-        );
+    );
 };
 
 export default IssuesMenu;
