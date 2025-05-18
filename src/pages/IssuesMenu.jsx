@@ -8,11 +8,12 @@ const IssuesMenu = () => {
             display: 'flex',
             width: '100%',
             height: '100vh',
-            marginLeft: '90px'
+            marginLeft: '5vw'
 
         },
         filters: {
             display: 'fixed',
+            padding: '20px',
             width: '250px',
             backgroundColor: '#f0f0f0',
             overflowY: 'hidden',
@@ -27,7 +28,6 @@ const IssuesMenu = () => {
 
     return (
         <div style={styles.page}>
-            <Sidebar/>
             <section style={styles.filters}>
                 Filtros
             </section>

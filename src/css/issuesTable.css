@@ -54,7 +54,7 @@
 }
 .issue-list tbody td:nth-child(4) {
     width: 20%;
-    text-align: left;
+    text-align: center;
     white-space: normal;
     word-break: break-word;
 }
@@ -85,4 +85,13 @@
 
 .text-primary {
     color: #0090ff;
+}
+
+.issue-link {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.issue-link:hover {
+    text-decoration: underline;
 }
