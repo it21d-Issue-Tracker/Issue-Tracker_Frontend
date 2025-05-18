@@ -1,13 +1,12 @@
 import './App.css'
-import Sidebar from './components/sidebar'; 
+import Sidebar from './components/sidebar';
+import IssuesMenu from "./pages/IssuesMenu.jsx";
 
 function App() {
     return (
         <>
-            <Sidebar />
-            <div className="content">
-                Hello, ASW!
-            </div>
+            <IssuesMenu />
+
         </>
     );
 }
