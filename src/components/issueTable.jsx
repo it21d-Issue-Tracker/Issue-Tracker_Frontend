@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../css/issuesTable.css';
 import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 const IssueTable = () => {
     const [issues, setIssues] = useState([]);
@@ -102,7 +103,11 @@ const IssueTable = () => {
                                     <td><span className="dot" style={{ backgroundColor: tipusObj?.color || '#ccc' }}></span></td>
                                     <td><span className="dot" style={{ backgroundColor: severityObj?.color || '#ccc' }}></span></td>
                                     <td><span className="dot" style={{ backgroundColor: priorityObj?.color || '#ccc' }}></span></td>
-                                    <td>#{String(issue.id).slice(0, 5)} {issue.subject}</td>
+                                    <td>
+                                        <Link to={`/issues/${issue.id}`} className="issue-link">
+                                            #{String(issue.id).slice(0, 5)}
+                                        </Link> {issue.subject}
+                                    </td>
                                     <td className="status-new">{issue.estat}</td>
                                     <td>{new Date(issue.data_creacio).toLocaleDateString()}</td>
                                     <td>
