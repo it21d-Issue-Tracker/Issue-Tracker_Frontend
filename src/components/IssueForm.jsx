@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import CaracteristicaSelect from './CaracteristicaSelect.jsx';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import '../css/issueFormPage.css';
 
 export default function IssueForm({ isEdit }) {
     const navigate = useNavigate();
+    const { id } = useParams();
     const [formData, setFormData] = useState({
         subject: '',
         descripcio: '',
@@ -50,8 +51,8 @@ export default function IssueForm({ isEdit }) {
                 });
 
                 if (isEdit) {
-                    const issueId = 123; // Posar l'id que vindra d el acrida mes adalt
-                    const resIssue = await axios.get(`/api/issues/${issueId}/`);
+                    const issueId = id;
+                    const resIssue = await axios.get(`https://issue-tracker-c802.onrender.com/api/issues/${issueId}/`);
 
                     setFormData({
                         subject: resIssue.data.subject,
@@ -105,16 +106,25 @@ export default function IssueForm({ isEdit }) {
                 prioritat: formData.prioritat,
             };
 
-            const response = await axios.post(
-                'https://issue-tracker-c802.onrender.com/api/issues/',
-                data,
-                {headers}
-            );
+            if (isEdit) {
+                // 🔄 EDITAR issue existent
+                await axios.patch(
+                    `https://issue-tracker-c802.onrender.com/api/issues/${id}/editar/`,
+                    data,
+                    { headers }
+                );
+            } else {
+                await axios.post(
+                    'https://issue-tracker-c802.onrender.com/api/issues/',
+                    data,
+                    {headers}
+                );
+            }
 
             navigate('/issues');
 
         } catch (error) {
-            console.error('Error al crear la issue:', error.response?.data || error.message);
+            console.error(`Error al ${isEdit ? 'editar' : 'crear'} la issue:`, error.response?.data || error.message);
         }
     }
 

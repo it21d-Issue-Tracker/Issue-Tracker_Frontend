@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import {Link, useNavigate, useParams} from 'react-router-dom';
 import '../css/viewIssue.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 function ViewIssue() {
-    const { id } = useParams(); 
+    const { id } = useParams();
+    const navigate = useNavigate();
     const [issue, setIssue] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -46,6 +47,10 @@ function ViewIssue() {
         if (!dateString) return "";
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(dateString).toLocaleDateString(undefined, options);
+    };
+
+    const handleEditClick = () => {
+        navigate(`/issues/${id}/edit`);
     };
 
     // Mostrar estado de carga
@@ -152,7 +157,9 @@ function ViewIssue() {
                 <div className="bottom-actions">
                     <button><i className="fa-regular fa-clock"></i></button>
                     <button className="delete-btn"><i className="fa-solid fa-trash"></i></button>
-                    <button className="delete-btn"><i className="fa-solid fa-pencil"></i></button>
+                    <button className="edit" onClick={handleEditClick}>
+                        <i className="fa-solid fa-pencil"></i>
+                    </button>
                 </div>
             </div>
         </div>

@@ -1,11 +1,18 @@
 import IssueForm from '../components/IssueForm.jsx';
+import { Link, useParams } from 'react-router-dom';
 import '../css/issueFormPage.css';
 
 export default function CrearEditarIssue({ isEdit = false }) {
+    const { id } = useParams();
     return (
         <div className="lightbox-create-edit">
             <div style={{ textAlign: 'right' }}>
-                {/* creu per a tornar enrere, falta fer routers <a href={isEdit ? `/issue/123` : `/issues`} className="back-link">x</a> */}
+                <Link
+                    to={isEdit ? `/issues/${id}` : `/issues`}
+                    className="back-link"
+                >
+                    x
+                </Link>
             </div>
             <h2 className="title">{isEdit ? 'Edit Issue' : 'New Issue'}</h2>
             <IssueForm isEdit={isEdit} />
