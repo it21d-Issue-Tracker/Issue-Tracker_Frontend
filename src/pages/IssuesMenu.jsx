@@ -1,5 +1,5 @@
 import Sidebar from "../components/sidebar.jsx";
-import IssueTable from "../components/issueTable.jsx";
+import IssueTable from "../components/IssueTable.jsx";
 
 const IssuesMenu = () => {
 

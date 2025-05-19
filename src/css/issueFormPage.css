@@ -1,0 +1,138 @@
+.lightbox-create-edit {
+    flex-basis: 700px;
+    max-width: 700px;
+    width: 700px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background: #fff;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+    height: auto;
+}
+.title {
+    text-align: center;
+    font-size: 24px;
+    color: #2e3440;
+    font-family: 'Ubuntu-Regular', Arial, Helvetica, sans-serif;
+}
+.form-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    width: 100%;
+}
+.left-column {
+    flex: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.right-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.form-fields {
+    background: #fff;
+    border: 2px solid #d8dee9;
+    border-radius: 3px;
+    color: #4c566a;
+    padding: .3rem 1rem .3rem .95rem;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 1rem;
+}
+
+.form-fields input,
+.form-fields textarea {
+    color: #4c566a;
+    width: 100%;
+    padding: .3rem;
+    border: none;
+    outline: none;
+    background: none;
+    box-sizing: border-box;
+}
+
+.form-fields input::placeholder,
+.form-fields textarea::placeholder {
+    color: #4c566a;
+}
+
+.form-fields textarea {
+    min-height: 100px;
+}
+.caracteristica-container {
+    background-color: #d8dee9;
+    padding: 8px;
+    border-radius: 8px;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0px;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.caracteristica-label {
+    font-weight: bold;
+    font-size: 13px;
+    min-width: 120px;
+    text-align: left;
+    flex-shrink: 0;
+}
+
+.caracteristica-select-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    justify-content: flex-end;
+    flex-grow: 1;
+}
+
+.caracteristica-select {
+    padding: 3px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: white;
+    cursor: pointer;
+    min-width: 120px;
+    font-size: 12px;
+}
+
+.caracteristica-color {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    display: inline-block;
+    border: 1px solid #888;
+}
+.form-buttons {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.create-issue-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #83eede;
+    color: #2e3440;
+    border: none;
+    border-radius: 3px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.create-issue-button:hover {
+    background-color: #228eaf;
+    color: #ffffff;
+}
