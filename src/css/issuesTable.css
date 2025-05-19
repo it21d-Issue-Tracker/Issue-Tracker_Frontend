@@ -95,3 +95,43 @@
 .issue-link:hover {
     text-decoration: underline;
 }
+
+.new-issue-button {
+    background-color: #83eede;
+    color: #2e3440;
+    border-radius: 4px;
+    border: 0;
+    text-align: center;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all;
+    font-size: .875rem;
+    padding: 8px 12px;
+}
+.new-issue-button:hover {
+    background-color: #228eaf;
+    color: #ffffff;
+}
+
+.bulk-issue-button {
+    background-color: #e0e0e0;
+    color: #333;
+    border-radius: 4px;
+    border: 0;
+    text-align: center;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all;
+    font-size: .875rem;
+    padding: 8px 12px;
+}
+.bulk-issue-button:hover {
+    background-color: #d1d1d1;
+
+}

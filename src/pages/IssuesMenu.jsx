@@ -1,5 +1,6 @@
-import Sidebar from "../components/sidebar.jsx";
-import IssueTable from "../components/IssueTable.jsx";
+import IssueTable from "../components/issueTable.jsx";
+import '../css/issuesTable.css';
+import {Link} from "react-router-dom";
 
 const IssuesMenu = () => {
 
@@ -24,6 +25,12 @@ const IssuesMenu = () => {
             backgroundColor: '#ffffff',
             overflow: 'hidden',
         },
+        buttonsContainer: {
+            display: 'flex',
+            justifyContent: 'flex-end',
+            gap: '10px',
+            marginBottom: '20px',
+        }
     };
 
     return (
@@ -32,6 +39,18 @@ const IssuesMenu = () => {
                 Filtros
             </section>
             <main style={styles.issues}>
+                <div style={styles.buttonsContainer} className="buttons-container">
+                    <div>
+                        <Link to="/issues/new">
+                            <button className="new-issue-button">+ NEW ISSUE</button>
+                        </Link>
+                    </div>
+                    <div>
+                        <Link to="/issues/bulk">
+                            <button className="bulk-issue-button">BULK INSERT</button>
+                        </Link>
+                    </div>
+                </div>
                 <IssueTable/>
             </main>
         </div>
