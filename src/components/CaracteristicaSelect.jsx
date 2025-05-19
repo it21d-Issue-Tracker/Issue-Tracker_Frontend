@@ -4,7 +4,7 @@ export default function CaracteristicaSelect({ field, label, options, value, onC
     const colorRef = useRef();
 
     useEffect(() => {
-        const selected = options.find(o => o.id === value);
+        const selected = options.find(o => o.name === value);
         if (selected && colorRef.current) {
             colorRef.current.style.backgroundColor = selected.color;
         }
@@ -22,7 +22,7 @@ export default function CaracteristicaSelect({ field, label, options, value, onC
                     className="caracteristica-select"
                 >
                     {options.map(option => (
-                        <option key={option.id} value={option.id} data-color={option.color}>
+                        <option key={option.id} value={option.name} data-color={option.color}>
                             {option.name}
                         </option>
                     ))}

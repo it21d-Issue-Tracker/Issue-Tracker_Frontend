@@ -61,6 +61,15 @@ export default function IssueForm({ isEdit }) {
                         prioritat: resIssue.data.prioritat,
                     });
                 }
+                else {
+                    setFormData(prev => ({
+                        ...prev,
+                        estat: resEstats.data[0]?.name ?? '',
+                        tipus: resTipus.data[0]?.name ?? '',
+                        gravetat: resGravetats.data[0]?.name ?? '',
+                        prioritat: resPrioritats.data[0]?.name ?? '',
+                    }));
+                }
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -75,10 +84,38 @@ export default function IssueForm({ isEdit }) {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = e => {
+    const handleSubmit = async e => {
         e.preventDefault();
-        // falta fer la crida al post
-    };
+
+        try {
+            const headers = {
+                Authorization: 'a0e9e8d35f67afa31eb5fab93182bdf93540ee30409234dab4e5b38a453b7983',
+                'Content-Type': 'application/json',
+            };
+
+            const data = {
+                subject: formData.subject,
+                descripcio: formData.descripcio,
+                assignat: formData.assignat || null,
+                estat: formData.estat,
+                tipus: formData.tipus,
+                gravetat: formData.gravetat,
+                prioritat: formData.prioritat,
+            };
+
+            const response = await axios.post(
+                'https://issue-tracker-c802.onrender.com/api/issues/',
+                data,
+                {headers}
+            );
+
+            console.log('Issue creada con éxito:', response.data);
+            // Aquí podrías redirigir, limpiar el form, etc.
+        } catch (error) {
+            console.error('Error al crear la issue:', error.response?.data || error.message);
+            // Mostrar mensaje al usuario si quieres
+        }
+    }
 
     return (
         <form onSubmit={handleSubmit}>
@@ -95,13 +132,13 @@ export default function IssueForm({ isEdit }) {
                         />
                     </fieldset>
                     <fieldset className="form-fields">
-            <textarea
-                name="descripcio"
-                placeholder="Please add descriptive text..."
-                value={formData.descripcio}
-                onChange={handleChange}
-                required
-            />
+                        <textarea
+                            name="descripcio"
+                            placeholder="Please add descriptive text..."
+                            value={formData.descripcio}
+                            onChange={handleChange}
+                            required
+                        />
                     </fieldset>
                 </div>
 
