@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import CaracteristicaSelect from './CaracteristicaSelect.jsx';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import '../css/issueFormPage.css';
 
 export default function IssueForm({ isEdit }) {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         subject: '',
         descripcio: '',
@@ -109,11 +111,10 @@ export default function IssueForm({ isEdit }) {
                 {headers}
             );
 
-            console.log('Issue creada con éxito:', response.data);
-            // Aquí podrías redirigir, limpiar el form, etc.
+            navigate('/issues');
+
         } catch (error) {
             console.error('Error al crear la issue:', error.response?.data || error.message);
-            // Mostrar mensaje al usuario si quieres
         }
     }
 

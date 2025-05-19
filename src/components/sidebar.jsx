@@ -14,7 +14,7 @@ const Sidebar = () => {
           </Link>
         </li>
         <li>
-          <Link to="/">
+          <Link to="/issues">
             <i className="far fa-bookmark"></i>Issues
           </Link>
         </li>
