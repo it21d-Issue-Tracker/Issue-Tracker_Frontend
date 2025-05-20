@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import DeleteModal from '../components/deleteModal'; // Importamos el componente de eliminación
 import '../css/viewIssue.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
@@ -8,6 +9,8 @@ function ViewIssue() {
     const [issue, setIssue] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    // Estado para controlar la visualización del modal de eliminación
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchIssueData = async () => {
@@ -46,6 +49,16 @@ function ViewIssue() {
         if (!dateString) return "";
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(dateString).toLocaleDateString(undefined, options);
+    };
+
+    // Función para abrir el modal de eliminación
+    const openDeleteModal = () => {
+        setIsDeleteModalOpen(true);
+    };
+
+    // Función para cerrar el modal de eliminación
+    const closeDeleteModal = () => {
+        setIsDeleteModalOpen(false);
     };
 
     // Mostrar estado de carga
@@ -151,11 +164,29 @@ function ViewIssue() {
 
                 <div className="bottom-actions">
                     <button><i className="fa-regular fa-clock"></i></button>
-                    <button className="delete-btn"><i className="fa-solid fa-trash"></i></button>
+                    {/* Botón para abrir el modal de eliminación */}
+                    <button 
+                      className="delete-btn" 
+                      onClick={openDeleteModal}
+                    >
+                      <i className="fa-solid fa-trash"></i>
+                    </button>
                     <button className="delete-btn"><i className="fa-solid fa-pencil"></i></button>
                 </div>
             </div>
         </div>
+
+        {/* Modal de confirmación para eliminar la issue */}
+        <DeleteModal
+          isOpen={isDeleteModalOpen}
+          onClose={closeDeleteModal}
+          title="Eliminar Issue"
+          itemName={issue?.subject || ''}
+          entityType="issue"
+          itemId={id}
+          apiEndpoint="https://issue-tracker-c802.onrender.com/api/issues"
+          redirectUrl="/" 
+        />
       </div>
     );
 };
