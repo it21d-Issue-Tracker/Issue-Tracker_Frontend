@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import DeleteModal from '../components/deleteModal'; // Importamos el componente de eliminación
+import {Link, useNavigate, useParams} from 'react-router-dom';
 import '../css/viewIssue.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 function ViewIssue() {
-    const { id } = useParams(); 
+    const { id } = useParams();
+    const navigate = useNavigate();
     const [issue, setIssue] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -51,19 +52,13 @@ function ViewIssue() {
         return new Date(dateString).toLocaleDateString(undefined, options);
     };
 
-    // Función para abrir el modal de eliminación
-    const openDeleteModal = () => {
-        setIsDeleteModalOpen(true);
-    };
-
-    // Función para cerrar el modal de eliminación
-    const closeDeleteModal = () => {
-        setIsDeleteModalOpen(false);
+    const handleEditClick = () => {
+        navigate(`/issues/${id}/edit`);
     };
 
     // Mostrar estado de carga
     if (loading) {
-        return <div className="loading">Cargando...</div>;
+        return <div className="loading">Loading...</div>;
     }
 
     // Mostrar estado de error
@@ -164,29 +159,15 @@ function ViewIssue() {
 
                 <div className="bottom-actions">
                     <button><i className="fa-regular fa-clock"></i></button>
-                    {/* Botón para abrir el modal de eliminación */}
-                    <button 
-                      className="delete-btn" 
-                      onClick={openDeleteModal}
-                    >
-                      <i className="fa-solid fa-trash"></i>
+                    <button className="delete-btn"><i className="fa-solid fa-trash"></i></button>
+                    <button className="edit" onClick={handleEditClick}>
+                        <i className="fa-solid fa-pencil"></i>
                     </button>
-                    <button className="delete-btn"><i className="fa-solid fa-pencil"></i></button>
                 </div>
             </div>
         </div>
 
-        {/* Modal de confirmación para eliminar la issue */}
-        <DeleteModal
-          isOpen={isDeleteModalOpen}
-          onClose={closeDeleteModal}
-          title="Eliminar Issue"
-          itemName={issue?.subject || ''}
-          entityType="issue"
-          itemId={id}
-          apiEndpoint="https://issue-tracker-c802.onrender.com/api/issues"
-          redirectUrl="/" 
-        />
+        
       </div>
     );
 };
