@@ -107,7 +107,6 @@ export default function IssueForm({ isEdit }) {
             };
 
             if (isEdit) {
-                // 🔄 EDITAR issue existent
                 await axios.patch(
                     `https://issue-tracker-c802.onrender.com/api/issues/${id}/editar/`,
                     data,
