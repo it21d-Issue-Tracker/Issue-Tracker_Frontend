@@ -53,6 +53,10 @@ function ViewIssue() {
         navigate(`/issues/${id}/edit`);
     };
 
+    const handleDateClick = () => {
+        navigate(`/issues/${id}/due_date`);
+    };
+
     // Mostrar estado de carga
     if (loading) {
         return <div className="loading">Cargando...</div>;
@@ -154,8 +158,24 @@ function ViewIssue() {
 
                 <hr />
 
+                {issue.due_date && (
+                    <>
+                        <div className="due-date-section" style={{ textAlign: 'left' }}>
+                            <div className="detail-label">DUE DATE</div>
+                            <div>
+                                {new Date(issue.due_date).toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                })}
+                            </div>
+                        </div>
+                        <hr />
+                    </>
+                )}
+
                 <div className="bottom-actions">
-                    <button><i className="fa-regular fa-clock"></i></button>
+                    <button><i className="fa-regular fa-clock" onClick={handleDateClick}></i></button>
                     <button className="delete-btn"><i className="fa-solid fa-trash"></i></button>
                     <button className="edit" onClick={handleEditClick}>
                         <i className="fa-solid fa-pencil"></i>
