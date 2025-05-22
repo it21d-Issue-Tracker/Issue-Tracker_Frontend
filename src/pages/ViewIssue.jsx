@@ -60,6 +60,16 @@ function ViewIssue() {
         navigate(`/issues/${id}/due_date`);
     };
 
+    // Función para abrir el modal de eliminación
+    const handleDeleteClick = () => {
+        setIsDeleteModalOpen(true);
+    };
+
+    // Función para cerrar el modal de eliminación
+    const handleCloseDeleteModal = () => {
+        setIsDeleteModalOpen(false);
+    };
+
     // Mostrar estado de carga
     if (loading) {
         return <div className="loading">Loading...</div>;
@@ -179,7 +189,9 @@ function ViewIssue() {
 
                 <div className="bottom-actions">
                     <button><i className="fa-regular fa-clock" onClick={handleDateClick}></i></button>
-                    <button className="delete-btn"><i className="fa-solid fa-trash"></i></button>
+                    <button className="delete-btn" onClick={handleDeleteClick}>
+                        <i className="fa-solid fa-trash"></i>
+                    </button>
                     <button className="edit" onClick={handleEditClick}>
                         <i className="fa-solid fa-pencil"></i>
                     </button>
@@ -187,7 +199,17 @@ function ViewIssue() {
             </div>
         </div>
 
-        
+        {/* Modal de eliminación */}
+        <DeleteModal
+            isOpen={isDeleteModalOpen}
+            onClose={handleCloseDeleteModal}
+            title="Delete Issue"
+            itemName={issue?.subject || 'this issue'}
+            entityType="issue"
+            itemId={id}
+            apiEndpoint="https://issue-tracker-c802.onrender.com/api/issues"
+            redirectUrl="/issues"
+        />
       </div>
     );
 };

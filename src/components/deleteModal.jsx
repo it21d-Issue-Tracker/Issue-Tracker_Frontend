@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createPortal } from 'react-dom';
 
 /**
- * DeleteModal - Componente Modal de eliminación adaptado para React Router
+ * DeleteModal
  * 
  * @param {Object} props
  * @param {boolean} props.isOpen - Controla si el modal está abierto
@@ -14,12 +15,12 @@ import { useNavigate } from 'react-router-dom';
  * @param {string} props.apiEndpoint - Endpoint para la eliminación
  * @param {string} props.redirectUrl - URL a la que redirigir después de eliminar
  */
-export default function DeleteModal({ 
-  isOpen, 
-  onClose, 
-  title, 
-  itemName, 
-  entityType, 
+export default function DeleteModal({
+  isOpen,
+  onClose,
+  title,
+  itemName,
+  entityType,
   itemId,
   apiEndpoint,
   redirectUrl
@@ -40,7 +41,8 @@ export default function DeleteModal({
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer 5d835a42496a91a23a02fe988257a1d7ae6e4561399843f71275e010cf398e43'
+          'Authorization': '5d835a42496a91a23a02fe988257a1d7ae6e4561399843f71275e010cf398e43'
+          
         },
       });
 
@@ -59,55 +61,148 @@ export default function DeleteModal({
     }
   };
 
-  return (
+  return createPortal(
     <div 
-      className="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center p-4"
-      onClick={onClose} // Cerrar al hacer clic en el fondo
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 9999,
+        padding: '1rem'
+      }}
+      onClick={onClose}
     >
       <div 
-        className="bg-white rounded-lg shadow-xl w-full max-w-md"
-        onClick={(e) => e.stopPropagation()} // Evitar que los clics dentro del modal lo cierren
+        style={{
+          backgroundColor: 'white',
+          borderRadius: '8px',
+          boxShadow: '0 10px 25px rgba(0, 0, 0, 0.3)',
+          width: '100%',
+          maxWidth: '600px', 
+          minWidth: '500px', 
+          maxHeight: '90vh',
+          overflow: 'auto'
+        }}
+        onClick={(e) => e.stopPropagation()} 
       >
-        <div className="p-6">
-          <div className="flex justify-between items-center w-full mb-5">
-            <h2 className="text-xl text-left text-gray-800 font-medium m-0">{title}</h2>
+        <div style={{ padding: '2rem' }}>
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center', 
+            marginBottom: '1.25rem' 
+          }}>
+            <h2 style={{ 
+              fontSize: '1.5rem', 
+              textAlign: 'left', 
+              color: '#374151', 
+              fontWeight: '500', 
+              margin: 0 
+            }}>
+              {title}
+            </h2>
             <button 
               onClick={onClose}
-              className="text-2xl bg-transparent border-0 cursor-pointer"
+              style={{
+                fontSize: '1.5rem',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                padding: '0.25rem',
+                lineHeight: 1,
+                color: '#6B7280'
+              }}
               aria-label="Close"
             >
-              x
+              ×
             </button>
           </div>
           
-          <p className="mb-5">
-            ¿Estás seguro que deseas eliminar este {entityType}: "{itemName}"?
+          <p style={{ 
+            marginBottom: '1.5rem', 
+            color: '#374151',
+            fontSize: '1.1rem', 
+            lineHeight: '1.6' 
+          }}>
+            Are you sure you want to delete the {entityType}: "{itemName}"?
           </p>
           
           {error && (
-            <div className="mb-4 p-3 bg-red-100 border-l-4 border-red-500 text-red-700">
+            <div style={{
+              marginBottom: '1rem',
+              padding: '0.75rem',
+              backgroundColor: '#FEE2E2',
+              borderLeft: '4px solid #EF4444',
+              color: '#B91C1C'
+            }}>
               {error}
             </div>
           )}
           
-          <div className="flex gap-3 justify-center">
+          <div style={{ 
+            display: 'flex', 
+            gap: '0.75rem', 
+            justifyContent: 'center' 
+          }}>
             <button
               onClick={handleDelete}
               disabled={isSubmitting}
-              className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded"
+              style={{
+                backgroundColor: isSubmitting ? '#DC2626' : '#DC2626',
+                color: 'white',
+                padding: '0.75rem 1.5rem', 
+                borderRadius: '6px', 
+                border: 'none',
+                cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                opacity: isSubmitting ? 0.7 : 1,
+                fontSize: '1rem', 
+                fontWeight: '500'
+              }}
+              onMouseOver={(e) => {
+                if (!isSubmitting) {
+                  e.target.style.backgroundColor = '#B91C1C';
+                }
+              }}
+              onMouseOut={(e) => {
+                if (!isSubmitting) {
+                  e.target.style.backgroundColor = '#DC2626';
+                }
+              }}
             >
-              {isSubmitting ? "Procesando..." : "Eliminar"}
+              {isSubmitting ? "Deleating..." : "Delete"}
             </button>
             
             <button
               onClick={onClose}
-              className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded"
+              style={{
+                backgroundColor: '#E5E7EB',
+                color: '#374151',
+                padding: '0.75rem 1.5rem', 
+                borderRadius: '6px',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: '1rem',
+                fontWeight: '500'
+              }}
+              onMouseOver={(e) => {
+                e.target.style.backgroundColor = '#D1D5DB';
+              }}
+              onMouseOut={(e) => {
+                e.target.style.backgroundColor = '#E5E7EB';
+              }}
             >
-              Cancelar
+              Cancel
             </button>
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body 
   );
 }
