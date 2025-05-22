@@ -4,6 +4,7 @@ import {Link, useNavigate, useParams} from 'react-router-dom';
 import '../css/viewIssue.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import AssignedSection from "../components/AssignedSection.jsx";
+import WatchersSection from "../components/WatchersSection.jsx";
 
 function ViewIssue() {
     const { id } = useParams();
@@ -159,15 +160,7 @@ function ViewIssue() {
                 <hr />
                 <AssignedSection assignedUser={issue.assignat} refreshIssue={refreshIssue} />
                 <hr />
-
-                <div className="watchers-section">
-                    <div className="detail-label">WATCHERS</div>
-                    <div className="user-list">
-                    </div>
-                    <div className="buttons-container">
-                    </div>
-                </div>
-
+                <WatchersSection watchers={issue.watchers} refreshIssue={refreshIssue}/>
                 <hr />
 
                 {issue.due_date && (
@@ -198,7 +191,6 @@ function ViewIssue() {
             </div>
         </div>
 
-        {/* Modal de eliminación */}
         <DeleteModal
             isOpen={isDeleteModalOpen}
             onClose={handleCloseDeleteModal}
