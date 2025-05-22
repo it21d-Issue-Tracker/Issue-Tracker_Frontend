@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 
 /**
- * DeleteModal
+ * DeleteModal - Componente Modal de eliminación adaptado para React Router
  * 
  * @param {Object} props
  * @param {boolean} props.isOpen - Controla si el modal está abierto
@@ -14,6 +14,7 @@ import { createPortal } from 'react-dom';
  * @param {string} props.itemId - ID del elemento a eliminar
  * @param {string} props.apiEndpoint - Endpoint para la eliminación
  * @param {string} props.redirectUrl - URL a la que redirigir después de eliminar
+ * @param {Function} props.customDeleteFunction - Función personalizada de eliminación (opcional)
  */
 export default function DeleteModal({
   isOpen,
@@ -23,32 +24,36 @@ export default function DeleteModal({
   entityType,
   itemId,
   apiEndpoint,
-  redirectUrl
+  redirectUrl,
+  customDeleteFunction
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // Si el modal no está abierto, no renderizar nada
   if (!isOpen) return null;
 
   const handleDelete = async () => {
     setIsSubmitting(true);
     setError(null);
-    
-    try {
-      const response = await fetch(`${apiEndpoint}/${itemId}/`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': '5d835a42496a91a23a02fe988257a1d7ae6e4561399843f71275e010cf398e43'
-          
-        },
-      });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.detail || `Error ${response.status}: No se pudo eliminar ${entityType}`);
+    try {
+      // Si se proporciona una función personalizada, usarla
+      if (typeof customDeleteFunction === 'function') {
+        await customDeleteFunction();
+      } else {
+        const response = await fetch(`${apiEndpoint}/${itemId}/`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': '5d835a42496a91a23a02fe988257a1d7ae6e4561399843f71275e010cf398e43',
+          },
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.detail || `Error ${response.status}: No se pudo eliminar ${entityType}`);
+        }
       }
 
       onClose();
@@ -76,7 +81,7 @@ export default function DeleteModal({
         zIndex: 9999,
         padding: '1rem'
       }}
-      onClick={onClose}
+      onClick={onClose} 
     >
       <div 
         style={{
@@ -91,7 +96,7 @@ export default function DeleteModal({
         }}
         onClick={(e) => e.stopPropagation()} 
       >
-        <div style={{ padding: '2rem' }}>
+        <div style={{ padding: '2rem' }}> 
           <div style={{ 
             display: 'flex', 
             justifyContent: 'space-between', 
@@ -183,8 +188,8 @@ export default function DeleteModal({
               style={{
                 backgroundColor: '#E5E7EB',
                 color: '#374151',
-                padding: '0.75rem 1.5rem', 
-                borderRadius: '6px',
+                padding: '0.75rem 1.5rem',
+                borderRadius: '6px', 
                 border: 'none',
                 cursor: 'pointer',
                 fontSize: '1rem',
