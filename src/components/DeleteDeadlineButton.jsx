@@ -3,5 +3,7 @@ export default function DeleteDeadlineButton({ onDelete }) {
         <button type="button" className="delete-btn" onClick={onDelete}>
             <i className="fa-solid fa-trash"></i>
         </button>
+
+        
     );
 }
