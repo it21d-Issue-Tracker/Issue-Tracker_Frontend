@@ -5,6 +5,7 @@ import ViewIssue from './pages/ViewIssue';
 import IssuesMenu from './pages/IssuesMenu';
 import CrearEditarIssue from "./pages/CrearEditarIssue.jsx";
 import AfegirDueDate from "./pages/AfegirDueDate.jsx";
+import AfegirAssignat from "./pages/AfegirAssignats.jsx";
 
 function AppContent() {
     const location = useLocation();
@@ -12,7 +13,8 @@ function AppContent() {
     const hideSidebarRoutes = [
         /^\/issues\/new$/,
         /^\/issues\/[^/]+\/edit$/,
-        /^\/issues\/[^/]+\/due_date$/
+        /^\/issues\/[^/]+\/due_date$/,
+        /^\/issues\/[^/]+\/assign$/,
     ];
 
     const shouldHideSidebar = hideSidebarRoutes.some((regex) =>
@@ -28,6 +30,7 @@ function AppContent() {
                 <Route path="/issues/new" element={<CrearEditarIssue isEdit={false} />} />
                 <Route path="/issues/:id/edit" element={<CrearEditarIssue isEdit={true} />} />
                 <Route path="/issues/:id/due_date" element={<AfegirDueDate />} />
+                <Route path="/issues/:id/assign" element={<AfegirAssignat />} />
             </Routes>
         </div>
     );

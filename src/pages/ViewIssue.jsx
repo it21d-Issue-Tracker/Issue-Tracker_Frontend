@@ -3,6 +3,7 @@ import DeleteModal from '../components/deleteModal'; // Importamos el componente
 import {Link, useNavigate, useParams} from 'react-router-dom';
 import '../css/viewIssue.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import AssignedSection from "../components/AssignedSection.jsx";
 
 function ViewIssue() {
     const { id } = useParams();
@@ -43,12 +44,6 @@ function ViewIssue() {
     const formatDate = (dateString) => {
         if (!dateString) return "";
         const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-        return new Date(dateString).toLocaleDateString(undefined, options);
-    };
-
-    const formatDueDate = (dateString) => {
-        if (!dateString) return "";
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(dateString).toLocaleDateString(undefined, options);
     };
 
@@ -151,14 +146,7 @@ function ViewIssue() {
                 </div>
 
                 <hr />
-
-                <div className="assigned-section">
-                    <div className="detail-label">ASSIGNED</div>
-                    
-                    <div className="buttons-container">
-                    </div>
-                </div>
-
+                <AssignedSection assignedUser={issue.assignat} />
                 <hr />
 
                 <div className="watchers-section">
