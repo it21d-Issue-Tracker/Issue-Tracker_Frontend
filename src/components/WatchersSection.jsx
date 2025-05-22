@@ -14,13 +14,14 @@ export default function WatchersSection({ watchers, refreshIssue }) {
     };
 
     const removeWatcher = async () => {
+        const updatedWatchers = watchers.filter(w => w !== userToRemove);
         const response = await fetch(`https://issue-tracker-c802.onrender.com/api/issues/${id}/watchers/`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': '5d835a42496a91a23a02fe988257a1d7ae6e4561399843f71275e010cf398e43',
+                'Authorization': 'a0e9e8d35f67afa31eb5fab93182bdf93540ee30409234dab4e5b38a453b7983',
             },
-            body: JSON.stringify({ watcher: userToRemove }),
+            body: JSON.stringify({ watchers: updatedWatchers }),
         });
 
         if (!response.ok) {
@@ -29,7 +30,7 @@ export default function WatchersSection({ watchers, refreshIssue }) {
         }
 
         await refreshIssue();
-        setShowModal(false);
+        navigate(`/issues/${id}`);
     };
 
    /* Implementar quan ja hi hagi usuaris loguejats
