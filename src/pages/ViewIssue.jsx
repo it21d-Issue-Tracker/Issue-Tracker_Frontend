@@ -65,6 +65,17 @@ function ViewIssue() {
         setIsDeleteModalOpen(false);
     };
 
+    const refreshIssue = async () => {
+        try {
+            const response = await fetch(`https://issue-tracker-c802.onrender.com/api/issues/${id}/`);
+            if (!response.ok) throw new Error("Error recargando issue");
+            const data = await response.json();
+            setIssue(data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     // Mostrar estado de carga
     if (loading) {
         return <div className="loading">Loading...</div>;
@@ -146,7 +157,7 @@ function ViewIssue() {
                 </div>
 
                 <hr />
-                <AssignedSection assignedUser={issue.assignat} />
+                <AssignedSection assignedUser={issue.assignat} refreshIssue={refreshIssue} />
                 <hr />
 
                 <div className="watchers-section">

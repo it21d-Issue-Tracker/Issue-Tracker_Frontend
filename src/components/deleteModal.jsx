@@ -38,7 +38,6 @@ export default function DeleteModal({
     setError(null);
 
     try {
-      // Si se proporciona una función personalizada, usarla
       if (typeof customDeleteFunction === 'function') {
         await customDeleteFunction();
       } else {
@@ -54,10 +53,9 @@ export default function DeleteModal({
           const errorData = await response.json().catch(() => ({}));
           throw new Error(errorData.detail || `Error ${response.status}: No se pudo eliminar ${entityType}`);
         }
+        navigate(redirectUrl);
       }
-
-      onClose();
-      navigate(redirectUrl);
+        onClose();
     } catch (err) {
       console.error(`Error al eliminar ${entityType}:`, err);
       setError(err.message);
