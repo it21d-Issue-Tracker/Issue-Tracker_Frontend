@@ -73,7 +73,7 @@ const IssueTable = () => {
 
     return (
         <div className="issue-list">
-            {loading ? <p>Carregant dades...</p> : (
+            {loading ? <p>Loading issues...</p> : (
                 <table>
                     <thead>
                     <tr>
