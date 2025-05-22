@@ -16,7 +16,7 @@ export default function AssignedSection({ assignedUser, refreshIssue }) {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': '5d835a42496a91a23a02fe988257a1d7ae6e4561399843f71275e010cf398e43',
+                'Authorization': 'a0e9e8d35f67afa31eb5fab93182bdf93540ee30409234dab4e5b38a453b7983',
             },
             body: JSON.stringify({ assignat: null }),
         });
