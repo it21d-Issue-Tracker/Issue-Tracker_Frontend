@@ -14,6 +14,7 @@ function ViewIssue() {
     const [error, setError] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [attachments, setAttachments] = useState([]);
+    const [attachmentToDelete, setAttachmentToDelete] = useState(null); 
 
 
     useEffect(() => {
@@ -32,7 +33,7 @@ function ViewIssue() {
 
                 setIssue(issueData);
                 setAttachments(attachmentsData.attachments);
-
+                console.log(issueData);
                 
             } catch (err) {
                 console.error("Error fetching issue or attachments:", err);
@@ -76,6 +77,33 @@ function ViewIssue() {
         }
     };
 
+    const handleDeleteAttachment = async (attachmentId) => {
+        setAttachmentToDelete(attachmentId);
+        setIsDeleteModalOpen(true);
+    };
+
+    const customDeleteAttachment = async () => {
+        if (!attachmentToDelete) return;
+
+        try {
+            const response = await fetch(`https://issue-tracker-c802.onrender.com/api/attachments/${attachmentToDelete.id}/`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': '5d835a42496a91a23a02fe988257a1d7ae6e4561399843f71275e010cf398e43'
+            }
+            });
+
+            if (response.status === 204) {
+            setAttachments(prev => prev.filter(att => att.id !== attachmentToDelete.id));
+            } else {
+            throw new Error(`Error al eliminar el archivo. Código: ${response.status}`);
+            }
+        } catch (err) {
+            console.error("Error deleting attachment:", err);
+            throw err;  // Para que el modal muestre el error
+        }
+        };
+
 
     const formatDate = (dateString) => {
         if (!dateString) return "";
@@ -91,12 +119,10 @@ function ViewIssue() {
         navigate(`/issues/${id}/due_date`);
     };
 
-    // Función para abrir el modal de eliminación
     const handleDeleteClick = () => {
         setIsDeleteModalOpen(true);
     };
 
-    // Función para cerrar el modal de eliminación
     const handleCloseDeleteModal = () => {
         setIsDeleteModalOpen(false);
     };
@@ -112,17 +138,14 @@ function ViewIssue() {
         }
     };
 
-    // Mostrar estado de carga
     if (loading) {
         return <div className="loading">Loading...</div>;
     }
 
-    // Mostrar estado de error
     if (error) {
         return <div className="error-message">Error: {error}</div>;
     }
 
-    // Verificar que issue exista antes de renderizar
     if (!issue) {
         return <div className="error-message">No se encontró la issue</div>;
     }
@@ -152,7 +175,7 @@ function ViewIssue() {
                 <div className="description-container">
                     <label htmlFor="description-input" className="description-label" style={{ textAlign: 'left', display: 'block' }}>Description</label>
 
-                    <textarea id="description-input" className="description-textarea" readOnly value="None" />
+                    <textarea id="description-input" className="description-textarea" readOnly value={issue.descripcio ? issue.descripcio : "None"} />
                 </div>
 
                 <div className="attachments-header">
@@ -162,12 +185,21 @@ function ViewIssue() {
                 <div className="attachments-list">
                     {attachments.map(att => (
                         <div className="attachment-item" key={att.id}>
-                        <div className="attachment-info">
-                            <i className="fas fa-file attachment-icon"></i>
-                            <a className="attachment-name" href={att.file} target="_blank" rel="noopener noreferrer">
-                            {att.file.split('/').pop()}
-                            </a>
-                        </div>
+                            <div className="attachment-info">
+                                <i className="fas fa-file attachment-icon"></i>
+                                <a className="attachment-name" href={att.file} target="_blank" rel="noopener noreferrer">
+                                {att.file.split('/').pop()}
+                                </a>
+                            </div>
+                            <div className="attachment-actions">
+                                   <button
+                                       className="delete-attachment-btn"
+                                       onClick={() => handleDeleteAttachment(att)}
+                                       title="Eliminar archivo"
+                                   >
+                                       <i className="fas fa-trash"></i>
+                                   </button>
+                               </div>
                         </div>
                     ))}
                     </div>
@@ -253,6 +285,21 @@ function ViewIssue() {
             itemId={id}
             apiEndpoint="https://issue-tracker-c802.onrender.com/api/issues"
             redirectUrl="/issues"
+        />
+
+        <DeleteModal
+            isOpen={isDeleteModalOpen}
+            onClose={() => {
+                setIsDeleteModalOpen(false);
+                setAttachmentToDelete(null);
+            }}
+            title="Delete Attachment"
+            itemName={attachmentToDelete?.file.split('/').pop() || ''}
+            entityType="attachment"
+            itemId={attachmentToDelete?.id}
+            apiEndpoint="https://issue-tracker-c802.onrender.com/api/attachments"
+            redirectUrl={null}  
+            customDeleteFunction={customDeleteAttachment}
         />
       </div>
     );
