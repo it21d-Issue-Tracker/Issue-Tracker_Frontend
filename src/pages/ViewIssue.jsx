@@ -12,27 +12,32 @@ function ViewIssue() {
     const [issue, setIssue] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    // Estado para controlar la visualización del modal de eliminación
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [attachments, setAttachments] = useState([]);
+
 
     useEffect(() => {
         const fetchIssueData = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`https://issue-tracker-c802.onrender.com/api/issues/${id}/`);
-                
-                if (!response.ok) {
-                    throw new Error(`Error ${response.status}: ${response.statusText}`);
-                }
-                
-                const data = await response.json();
-                console.log("Datos recibidos:", data);
+                const [issueRes, attachmentsRes] = await Promise.all([
+                    fetch(`https://issue-tracker-c802.onrender.com/api/issues/${id}/`),
+                    fetch(`https://issue-tracker-c802.onrender.com/api/attachments/per-issue/${id}/`)
+                ]);
 
-                setIssue(data);
-                setLoading(false);
+                if (!issueRes.ok || !attachmentsRes.ok) throw new Error("Error al obtener datos");
+
+                const issueData = await issueRes.json();
+                const attachmentsData = await attachmentsRes.json();
+
+                setIssue(issueData);
+                setAttachments(attachmentsData.attachments);
+
+                
             } catch (err) {
-                console.error("Error fetching issue:", err);
+                console.error("Error fetching issue or attachments:", err);
                 setError(err.message);
+            } finally {
                 setLoading(false);
             }
         };
@@ -41,6 +46,36 @@ function ViewIssue() {
             fetchIssueData();
         }
     }, [id]);
+
+    const handleUpload = async (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        const files = e.target.files.files;
+
+        for (let i = 0; i < files.length; i++) {
+            formData.append('file', files[i]);
+        }
+        formData.append('issue', id);
+
+        try {
+            const response = await fetch('https://issue-tracker-c802.onrender.com/api/attachments/', {
+                method: 'POST',
+                headers: {
+                    'Authorization': '5d835a42496a91a23a02fe988257a1d7ae6e4561399843f71275e010cf398e43'
+                },
+                body: formData
+            });
+
+            if (!response.ok) throw new Error('Error al subir archivo(s)');
+
+            const newAttachment = await response.json();
+            setAttachments(prev => [...prev, newAttachment.data]);
+
+        } catch (err) {
+            console.error("Error uploading file:", err);
+        }
+    };
+
 
     const formatDate = (dateString) => {
         if (!dateString) return "";
@@ -91,6 +126,7 @@ function ViewIssue() {
     if (!issue) {
         return <div className="error-message">No se encontró la issue</div>;
     }
+    console.log("Rendering attachments", attachments);
 
     return (
       <div className="content"> 
@@ -120,10 +156,27 @@ function ViewIssue() {
                 </div>
 
                 <div className="attachments-header">
-                    <div className="attachments-count">0 Attachments</div>
+                    <div className="attachments-count">{attachments.length} Attachments</div>
                 </div>
 
+                <div className="attachments-list">
+                    {attachments.map(att => (
+                        <div className="attachment-item" key={att.id}>
+                        <div className="attachment-info">
+                            <i className="fas fa-file attachment-icon"></i>
+                            <a className="attachment-name" href={att.file} target="_blank" rel="noopener noreferrer">
+                            {att.file.split('/').pop()}
+                            </a>
+                        </div>
+                        </div>
+                    ))}
+                    </div>
+
                 <div className="upload-form">
+                    <form onSubmit={handleUpload}>
+                        <input type="file" name="files" multiple required />
+                        <button type="submit">Upload File(s)</button>
+                    </form>
                 </div>
 
                 <div className="comments-section">
