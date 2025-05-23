@@ -7,6 +7,7 @@ import CrearEditarIssue from "./pages/CrearEditarIssue.jsx";
 import AfegirDueDate from "./pages/AfegirDueDate.jsx";
 import AfegirAssignat from "./pages/AfegirAssignats.jsx";
 import AfegirWatchers from "./pages/AfegirWatchers.jsx";
+import BulkInsertPage from "./pages/BulkInsert.jsx";
 
 function AppContent() {
     const location = useLocation();
@@ -16,6 +17,8 @@ function AppContent() {
         /^\/issues\/[^/]+\/edit$/,
         /^\/issues\/[^/]+\/due_date$/,
         /^\/issues\/[^/]+\/assign$/,
+        /^\/issues\/bulk-insert$/,
+
     ];
 
     const shouldHideSidebar = hideSidebarRoutes.some((regex) =>
@@ -27,8 +30,9 @@ function AppContent() {
             {!shouldHideSidebar && <Sidebar />}
             <Routes>
                 <Route path="/issues" element={<IssuesMenu />} />
-                <Route path="/issues/:id" element={<ViewIssue />} />
                 <Route path="/issues/new" element={<CrearEditarIssue isEdit={false} />} />
+                <Route path="/issues/bulk-insert" element={<BulkInsertPage />} />
+                <Route path="/issues/:id" element={<ViewIssue />} />
                 <Route path="/issues/:id/edit" element={<CrearEditarIssue isEdit={true} />} />
                 <Route path="/issues/:id/due_date" element={<AfegirDueDate />} />
                 <Route path="/issues/:id/assign" element={<AfegirAssignat />} />
