@@ -46,7 +46,7 @@ const IssuesMenu = () => {
                         </Link>
                     </div>
                     <div>
-                        <Link to="/issues/bulk">
+                        <Link to="/issues/bulk-insert">
                             <button className="bulk-issue-button">BULK INSERT</button>
                         </Link>
                     </div>
