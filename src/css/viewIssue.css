@@ -13,11 +13,10 @@ html, body {
     margin-left: 50px; 
     padding: 0px 50px;
     padding-right: 50px;
+    min-height: 100vh;
     background-color: white;
     display: flex;
     flex-direction: column;
-    flex: 1;
-    overflow: hidden;
 }
 
 
@@ -55,7 +54,6 @@ html, body {
     flex-direction: column;
     box-sizing: border-box;
 }
-
 
 .issue-header {
     display: flex;
@@ -237,12 +235,8 @@ html, body {
     border-bottom: 2px solid #172b4d;
 }
 .comment-input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #dfe1e6;
-    border-radius: 4px;
-    margin-bottom: 20px;
-    box-sizing: border-box;
+  resize: none;
+  overflow-y: auto;
 }
 .detail-row {
     display: flex;
@@ -268,14 +262,14 @@ html, body {
 }
 .assigned-section {
     display: flex;
-    flex-direction: column; /* Coloca los elementos en columna */
+    flex-direction: column;
     align-items: flex-start;
 }
 
 .watchers-section {
     display: flex;
-    flex-direction: column; /* Coloca los elementos en columna */
-    align-items: flex-start; /* Asegura que estén alineados a la izquierda */
+    flex-direction: column; 
+    align-items: flex-start; 
 
 }
 .bottom-actions {
@@ -369,7 +363,7 @@ hr {
 
 .comment-input {
     width: 100%;
-    padding: 10px 80px 10px 10px; /* espai per al botó a la dreta */
+    padding: 10px 80px 10px 10px; 
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 14px;
@@ -441,8 +435,19 @@ hr {
 }
 
 .comment-text {
-    margin-top: 5px;
-    font-size: 1em;
+  height: 4.5em;
+  max-height: 4.5em;
+  overflow-y: auto;
+  word-wrap: break-word;     
+  text-align: left;         
+  margin-top: 5px;          
+  width: 100%;
+  box-sizing: border-box;
+
+  overflow-wrap: anywhere;  
+  word-break: break-all;   
+
+  overflow-x: auto;
 }
 
 .label-due-date {
