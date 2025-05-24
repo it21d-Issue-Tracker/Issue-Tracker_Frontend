@@ -10,6 +10,11 @@ import AfegirWatchers from "./pages/AfegirWatchers.jsx";
 import BulkInsertPage from "./pages/BulkInsert.jsx";
 import TipusList from './pages/TipusList';
 import CrearEditarTipus from "./pages/CrearEditarTipus.jsx";
+import PrioritiesList from './pages/PrioritiesList';
+import CrearEditarPriorities from "./pages/CrearEditarPriorities.jsx";
+import SeveritiesList from "./pages/SeveritiesList.jsx";
+import CrearEditarSeverity from "./pages/CrearEditarSeverities.jsx";
+
 
 function AppContent() {
     const location = useLocation();
@@ -23,6 +28,12 @@ function AppContent() {
         /^\/settings\/tipus\/create$/,
         /^\/settings\/tipus\/edit\/[^/]+$/,
         /^\/settings\/tipus\/delete\/[^/]+$/,
+        /^\/settings\/priority\/create$/,
+        /^\/settings\/priority\/edit\/[^/]+$/,
+        /^\/settings\/priority\/delete\/[^/]+$/,
+        /^\/settings\/severity\/create$/,
+        /^\/settings\/severity\/edit\/[^/]+$/,
+        /^\/settings\/severity\/delete\/[^/]+$/,
 
     ];
 
@@ -45,6 +56,12 @@ function AppContent() {
                 <Route path="/settings/tipus" element={<TipusList />} />
                 <Route path="/settings/tipus/create" element={<CrearEditarTipus />} />
                 <Route path="/settings/tipus/edit/:id" element={<CrearEditarTipus />} />
+                <Route path="/settings/priorities" element={<PrioritiesList />} />
+                <Route path="/settings/priorities/create" element={<CrearEditarPriorities />} />
+                <Route path="/settings/priorities/edit/:id" element={<CrearEditarPriorities />} />
+                <Route path="/settings/severities" element={<SeveritiesList />} />
+                <Route path="/settings/severities/create" element={<CrearEditarSeverity />} />
+                <Route path="/settings/severities/edit/:id" element={<CrearEditarSeverity />} />
             </Routes>
         </div>
     );
