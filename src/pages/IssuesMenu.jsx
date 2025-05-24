@@ -1,8 +1,11 @@
+import React, { useState } from 'react';
 import IssueTable from "../components/issueTable.jsx";
+import FiltersPanel from "../components/FiltersPanel.jsx";
 import '../css/issuesTable.css';
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const IssuesMenu = () => {
+    const [selectedFilters, setSelectedFilters] = useState({});
 
     const styles = {
         page: {
@@ -10,20 +13,17 @@ const IssuesMenu = () => {
             width: '100%',
             height: '100vh',
             marginLeft: '5vw'
-
         },
         filters: {
-            display: 'fixed',
             padding: '20px',
             width: '250px',
-            backgroundColor: '#f0f0f0',
-            overflowY: 'hidden',
+            overflowY: 'auto',
         },
         issues: {
             flex: 1,
             padding: '20px',
             backgroundColor: '#ffffff',
-            overflow: 'hidden',
+            overflow: 'auto',
         },
         buttonsContainer: {
             display: 'flex',
@@ -36,8 +36,12 @@ const IssuesMenu = () => {
     return (
         <div style={styles.page}>
             <section style={styles.filters}>
-                Filtros
+                <FiltersPanel
+                    selectedFilters={selectedFilters}
+                    setSelectedFilters={setSelectedFilters}
+                />
             </section>
+
             <main style={styles.issues}>
                 <div style={styles.buttonsContainer} className="buttons-container">
                     <div>
@@ -51,7 +55,7 @@ const IssuesMenu = () => {
                         </Link>
                     </div>
                 </div>
-                <IssueTable/>
+                <IssueTable selectedFilters={selectedFilters} />
             </main>
         </div>
     );

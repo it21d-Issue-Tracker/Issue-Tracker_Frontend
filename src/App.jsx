@@ -15,6 +15,7 @@ import CrearEditarPriorities from "./pages/CrearEditarPriorities.jsx";
 import SeveritiesList from "./pages/SeveritiesList.jsx";
 import CrearEditarSeverity from "./pages/CrearEditarSeverities.jsx";
 
+
 function AppContent() {
     const location = useLocation();
 
@@ -33,6 +34,7 @@ function AppContent() {
         /^\/settings\/severity\/create$/,
         /^\/settings\/severity\/edit\/[^/]+$/,
         /^\/settings\/severity\/delete\/[^/]+$/,
+
     ];
 
     const shouldHideSidebar = hideSidebarRoutes.some((regex) =>
