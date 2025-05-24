@@ -28,6 +28,7 @@ function AppContent() {
         /^\/settings\/priority\/create$/,
         /^\/settings\/priority\/edit\/[^/]+$/,
         /^\/settings\/priority\/delete\/[^/]+$/,
+
     ];
 
     const shouldHideSidebar = hideSidebarRoutes.some((regex) =>

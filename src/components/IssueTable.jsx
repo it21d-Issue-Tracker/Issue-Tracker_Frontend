@@ -3,8 +3,8 @@ import axios from 'axios';
 import '../css/issuesTable.css';
 import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-
-const IssueTable = () => {
+import qs from 'qs';
+const IssueTable = ({ selectedFilters }) => {
     const [issues, setIssues] = useState([]);
     const [tipusList, setTipusList] = useState([]);
     const [severityList, setSeverityList] = useState([]);
@@ -13,7 +13,6 @@ const IssueTable = () => {
     const [sortOrder, setSortOrder] = useState('asc');
     const [loading, setLoading] = useState(false);
 
-    // Fetch tipus, severity i priority al muntar component
     useEffect(() => {
         const fetchMetadata = async () => {
             try {
@@ -32,26 +31,35 @@ const IssueTable = () => {
         fetchMetadata();
     }, []);
 
-    // Fetch issues quan canvïi sortBy o sortOrder
     useEffect(() => {
         const fetchIssues = async () => {
             try {
                 setLoading(true);
+
                 const ordering = sortOrder === 'asc' ? sortBy : `-${sortBy}`;
-                console.log('Cridant API amb:', { ordering });
+                const params = { ordering };
+
+                if (selectedFilters) {
+                    Object.entries(selectedFilters).forEach(([key, values]) => {
+                        if (Array.isArray(values)) {
+                            params[key] = values;
+                        }
+                    });
+                }
+
                 const response = await axios.get('https://issue-tracker-c802.onrender.com/api/issues/', {
-                    params: { ordering }
-                });
-                console.log('Resposta del backend:', response.data);
-                setIssues(response.data);
+                    params,
+                    paramsSerializer: params => qs.stringify(params, { arrayFormat: 'comma' })
+                });                setIssues(response.data);
             } catch (error) {
                 console.error("Error carregant les issues:", error);
             } finally {
                 setLoading(false);
             }
         };
+
         fetchIssues();
-    }, [sortBy, sortOrder]);
+    }, [sortBy, sortOrder, selectedFilters]);
 
     const handleSort = (column) => {
         if (sortBy === column) {
@@ -77,7 +85,8 @@ const IssueTable = () => {
                 <table>
                     <thead>
                     <tr>
-                        {[{ key: 'tipus', label: 'TYPE' },
+                        {[
+                            { key: 'tipus', label: 'TYPE' },
                             { key: 'gravetat', label: 'SEVERITY' },
                             { key: 'prioritat', label: 'PRIORITY' },
                             { key: 'id', label: 'ISSUE' },
@@ -113,8 +122,8 @@ const IssueTable = () => {
                                     <td>
                                         {issue.assignat?.get_profile_picture_url ? (
                                             <span className="assign-avatars">
-                                                <img src={issue.assignat.get_profile_picture_url} alt={issue.assignat.username} />
-                                            </span>
+                                                    <img src={issue.assignat.get_profile_picture_url} alt={issue.assignat.username} />
+                                                </span>
                                         ) : (
                                             'Unassigned'
                                         )}
