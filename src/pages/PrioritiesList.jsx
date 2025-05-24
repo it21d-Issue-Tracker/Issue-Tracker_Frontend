@@ -11,7 +11,7 @@ const PrioritiesList = () => {
     const fetchPriorities = async () => {
       try {
         const res = await fetch('https://issue-tracker-c802.onrender.com/api/priorities/');
-        if (!res.ok) throw new Error('Error al obtener las prioridades');
+        if (!res.ok) throw new Error('Error fetching priorities');
         const data = await res.json();
         setPriorities(data);
       } catch (err) {
@@ -33,17 +33,17 @@ const PrioritiesList = () => {
 
   return (
     <>
-      {/* Barra lateral secundaria */}
+      {/* Sidebar */}
       <aside className="context-sidebar">
         <ul>
-          <li><Link to="/settings/priorities">Prioritats</Link></li>
-          <li><Link to="/settings/severities">Severitats</Link></li>
-          <li><Link to="/settings/statuses">Estats</Link></li>
-          <li><Link to="/settings/tipus">Tipus</Link></li>
+          <li><Link to="/settings/priorities">Priorities</Link></li>
+          <li><Link to="/settings/severities">Severities</Link></li>
+          <li><Link to="/settings/statuses">Statuses</Link></li>
+          <li><Link to="/settings/tipus">Types</Link></li>
         </ul>
       </aside>
 
-      {/* Contenido principal */}
+      {/* Main content */}
       <main style={styles.content}>
         <header style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
           <h1>Priorities</h1>
@@ -72,8 +72,8 @@ const PrioritiesList = () => {
                       <td><span className="dot" style={{ backgroundColor: priority.color }}></span></td>
                       <td>{priority.name}</td>
                       <td>
-                        <Link to={`/settings/priorities/edit/${priority.id}`} title="Editar">✏️</Link>
-                        <Link to={`/settings/priorities/delete/${priority.id}`} title="Eliminar">❌</Link>
+                        <Link to={`/settings/priorities/edit/${priority.id}`} title="Edit">✏️</Link>
+                        <Link to={`/settings/priorities/delete/${priority.id}`} title="Delete">❌</Link>
                       </td>
                     </tr>
                   ))
