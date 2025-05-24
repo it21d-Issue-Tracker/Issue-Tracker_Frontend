@@ -38,7 +38,7 @@ const PrioritiesList = () => {
         <ul>
           <li><Link to="/settings/priorities">Prioritats</Link></li>
           <li><Link to="/settings/severities">Severitats</Link></li>
-          <li><Link to="/settings/status">Estats</Link></li>
+          <li><Link to="/settings/statuses">Estats</Link></li>
           <li><Link to="/settings/tipus">Tipus</Link></li>
         </ul>
       </aside>

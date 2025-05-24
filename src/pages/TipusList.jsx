@@ -38,7 +38,7 @@ const TipusList = () => {
         <ul>
           <li><Link to="/settings/priorities">Priorities</Link></li>
           <li><Link to="/settings/severities">Severities</Link></li>
-          <li><Link to="/settings/status">Statuses</Link></li>
+          <li><Link to="/settings/statuses">Statuses</Link></li>
           <li><Link to="/settings/tipus">Types</Link></li>
         </ul>
       </aside>
