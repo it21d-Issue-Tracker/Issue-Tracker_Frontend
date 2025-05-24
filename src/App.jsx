@@ -34,7 +34,6 @@ function AppContent() {
         /^\/settings\/severity\/create$/,
         /^\/settings\/severity\/edit\/[^/]+$/,
         /^\/settings\/severity\/delete\/[^/]+$/,
-
     ];
 
     const shouldHideSidebar = hideSidebarRoutes.some((regex) =>
