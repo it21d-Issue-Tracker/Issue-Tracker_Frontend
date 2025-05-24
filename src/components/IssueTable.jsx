@@ -133,10 +133,6 @@ const IssueTable = ({ selectedFilters, searchTerm }) => {
                   {issue.subject}
                 </td>
                 <td>
-                  <span
-                    className="dot"
-                    style={{ backgroundColor: getColorByName(estat, issue.estat) }}
-                  />{' '}
                   {issue.estat}
                 </td>
                 <td>{new Date(issue.data_creacio).toLocaleDateString()}</td>
