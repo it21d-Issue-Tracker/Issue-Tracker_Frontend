@@ -1,0 +1,94 @@
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import '../css/SettingsTable.css'; // Mismo CSS compartido
+
+const SeveritiesList = () => {
+  const [severities, setSeverities] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchSeverities = async () => {
+      try {
+        const res = await fetch('https://issue-tracker-c802.onrender.com/api/severity/');
+        if (!res.ok) throw new Error('Error al obtener las severidades');
+        const data = await res.json();
+        setSeverities(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSeverities();
+  }, []);
+
+  const styles = {
+    content: {
+      marginLeft: '420px', // 220px main sidebar + 200px secondary sidebar
+      padding: '20px',
+      maxWidth: '900px',
+    },
+  };
+
+  return (
+    <>
+      {/* Barra lateral secundaria */}
+      <aside className="context-sidebar">
+        <ul>
+          <li><Link to="/settings/priorities">Prioritats</Link></li>
+          <li><Link to="/settings/severities">Severitats</Link></li>
+          <li><Link to="/settings/status">Estats</Link></li>
+          <li><Link to="/settings/tipus">Tipus</Link></li>
+        </ul>
+      </aside>
+
+      {/* Contenido principal */}
+      <main style={styles.content}>
+        <header style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+          <h1>Severities</h1>
+          <Link to="/settings/severities/create">
+            <button className="new-setting-button">+ NEW SEVERITY</button>
+          </Link>
+        </header>
+
+        {loading && <p className="loading-message">Loading severities...</p>}
+        {error && <p className="error-message">{error}</p>}
+
+        {!loading && !error && (
+          <div className="settings-list">
+            <table>
+              <thead>
+                <tr>
+                  <th>COLOR</th>
+                  <th>NAME</th>
+                  <th>ACTIONS</th>
+                </tr>
+              </thead>
+              <tbody>
+                {severities.length > 0 ? (
+                  severities.map(severity => (
+                    <tr key={severity.id}>
+                      <td><span className="dot" style={{ backgroundColor: severity.color }}></span></td>
+                      <td>{severity.name}</td>
+                      <td>
+                        <Link to={`/settings/severities/edit/${severity.id}`} title="Editar">✏️</Link>
+                        <Link to={`/settings/severities/delete/${severity.id}`} title="Eliminar">❌</Link>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="3">No severities available.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </main>
+    </>
+  );
+};
+
+export default SeveritiesList;
