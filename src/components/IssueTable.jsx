@@ -11,6 +11,7 @@ const IssueTable = ({ selectedFilters, searchTerm }) => {
   const [sortBy, setSortBy] = useState('id');
   const [sortOrder, setSortOrder] = useState('asc');
   const [loading, setLoading] = useState(false);
+  const [usersCache, setUsersCache] = useState({});
 
   const {
     loading: loadingMeta,
@@ -45,7 +46,34 @@ const IssueTable = ({ selectedFilters, searchTerm }) => {
             paramsSerializer: params => qs.stringify(params, { arrayFormat: 'comma' })
           }
         );
-        setIssues(response.data);
+
+        const issuesData = response.data;
+        setIssues(issuesData);
+
+        // Cache assigned user data if not already
+        const usernames = Array.from(new Set(
+          issuesData
+            .map(issue => issue.assignat)
+            .filter(username => username && !usersCache[username])
+        ));
+
+        if (usernames.length > 0) {
+          const usersData = {};
+          await Promise.all(
+            usernames.map(async username => {
+              try {
+                const res = await axios.get(
+                  `https://issue-tracker-c802.onrender.com/api/usuaris/${username}`
+                );
+                usersData[username] = res.data;
+              } catch (err) {
+                console.error(`Error loading user ${username}:`, err);
+                usersData[username] = null;
+              }
+            })
+          );
+          setUsersCache(prev => ({ ...prev, ...usersData }));
+        }
       } catch (error) {
         console.error('Error cargando las issues:', error);
       } finally {
@@ -132,20 +160,18 @@ const IssueTable = ({ selectedFilters, searchTerm }) => {
                   </Link>{' '}
                   {issue.subject}
                 </td>
-                <td>
-                  {issue.estat}
-                </td>
+                <td>{issue.estat}</td>
                 <td>{new Date(issue.data_creacio).toLocaleDateString()}</td>
                 <td>
-                  {issue.assignat?.get_profile_picture_url ? (
+                  {issue.assignat && usersCache[issue.assignat]?.profile_picture_url ? (
                     <span className="assign-avatars">
                       <img
-                        src={issue.assignat.get_profile_picture_url}
-                        alt={issue.assignat.username}
+                        src={usersCache[issue.assignat].profile_picture_url}
+                        alt={issue.assignat}
                       />
                     </span>
                   ) : (
-                    'Unassigned'
+                    issue.assignat || 'Unassigned'
                   )}
                 </td>
               </tr>
