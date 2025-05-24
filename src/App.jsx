@@ -8,6 +8,8 @@ import AfegirDueDate from "./pages/AfegirDueDate.jsx";
 import AfegirAssignat from "./pages/AfegirAssignats.jsx";
 import AfegirWatchers from "./pages/AfegirWatchers.jsx";
 import BulkInsertPage from "./pages/BulkInsert.jsx";
+import TipusList from './pages/TipusList';
+import CrearEditarTipus from "./pages/CrearEditarTipus.jsx";
 
 function AppContent() {
     const location = useLocation();
@@ -18,6 +20,9 @@ function AppContent() {
         /^\/issues\/[^/]+\/due_date$/,
         /^\/issues\/[^/]+\/assign$/,
         /^\/issues\/bulk-insert$/,
+        /^\/settings\/tipus\/create$/,
+        /^\/settings\/tipus\/edit\/[^/]+$/,
+        /^\/settings\/tipus\/delete\/[^/]+$/,
 
     ];
 
@@ -37,6 +42,9 @@ function AppContent() {
                 <Route path="/issues/:id/due_date" element={<AfegirDueDate />} />
                 <Route path="/issues/:id/assign" element={<AfegirAssignat />} />
                 <Route path="/issues/:id/watchers" element={<AfegirWatchers />} />
+                <Route path="/settings/tipus" element={<TipusList />} />
+                <Route path="/settings/tipus/create" element={<CrearEditarTipus />} />
+                <Route path="/settings/tipus/edit/:id" element={<CrearEditarTipus />} />
             </Routes>
         </div>
     );

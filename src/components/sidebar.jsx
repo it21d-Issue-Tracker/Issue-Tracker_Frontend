@@ -19,7 +19,7 @@ const Sidebar = () => {
           </Link>
         </li>
         <li>
-          <Link to="/">
+          <Link to="/settings/tipus">
             <i className="fas fa-cog"></i>Settings
           </Link>
         </li>
