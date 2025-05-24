@@ -25,9 +25,9 @@ const SeveritiesList = () => {
 
   const styles = {
     content: {
-      marginLeft: '420px', // 220px main sidebar + 200px secondary sidebar
-      padding: '20px',
-      maxWidth: '900px',
+      marginLeft: '360px',
+      padding: '40px',
+      maxWidth: '1200px',
     },
   };
 

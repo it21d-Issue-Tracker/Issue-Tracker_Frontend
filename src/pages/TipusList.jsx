@@ -25,10 +25,9 @@ const TipusList = () => {
 
   const styles = {
     content: {
-      marginLeft: '420px',
-      padding: '20px',
-      maxWidth: '900px',
-      marginBottom: '40px',
+      marginLeft: '360px',
+      padding: '40px',
+      maxWidth: '1200px',
     },
   };
 

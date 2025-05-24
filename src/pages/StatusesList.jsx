@@ -25,9 +25,9 @@ const StatusesList = () => {
 
   const styles = {
     content: {
-      marginLeft: '420px', // 220px + 200px de sidebars
-      padding: '20px',
-      maxWidth: '900px',
+      marginLeft: '360px',
+      padding: '40px',
+      maxWidth: '1200px',
     },
   };
 
