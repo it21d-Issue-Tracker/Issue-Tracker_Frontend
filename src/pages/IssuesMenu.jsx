@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import IssueTable from "../components/issueTable.jsx";
 import FiltersPanel from "../components/FiltersPanel.jsx";
+import SearchBar from "../components/SearchBar.jsx";
 import '../css/issuesTable.css';
 import { Link } from "react-router-dom";
 
 const IssuesMenu = () => {
     const [selectedFilters, setSelectedFilters] = useState({});
+    const [searchTerm, setSearchTerm] = useState('');
 
     const styles = {
         page: {
@@ -36,6 +38,10 @@ const IssuesMenu = () => {
     return (
         <div style={styles.page}>
             <section style={styles.filters}>
+                <div className="header">
+                    <h1>Issues</h1>
+                </div>
+                <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
                 <FiltersPanel
                     selectedFilters={selectedFilters}
                     setSelectedFilters={setSelectedFilters}
@@ -55,7 +61,7 @@ const IssuesMenu = () => {
                         </Link>
                     </div>
                 </div>
-                <IssueTable selectedFilters={selectedFilters} />
+                <IssueTable selectedFilters={selectedFilters} searchTerm={searchTerm} />
             </main>
         </div>
     );
