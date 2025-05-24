@@ -14,6 +14,8 @@ import PrioritiesList from './pages/PrioritiesList';
 import CrearEditarPriorities from "./pages/CrearEditarPriorities.jsx";
 import SeveritiesList from "./pages/SeveritiesList.jsx";
 import CrearEditarSeverity from "./pages/CrearEditarSeverities.jsx";
+import StatusesList from "./pages/StatusesList.jsx";
+import CrearEditarStatus from "./pages/CrearEditarStatuses.jsx";
 
 
 function AppContent() {
@@ -34,6 +36,9 @@ function AppContent() {
         /^\/settings\/severity\/create$/,
         /^\/settings\/severity\/edit\/[^/]+$/,
         /^\/settings\/severity\/delete\/[^/]+$/,
+        /^\/settings\/status\/create$/,
+        /^\/settings\/status\/edit\/[^/]+$/,
+        /^\/settings\/status\/delete\/[^/]+$/,
     ];
 
     const shouldHideSidebar = hideSidebarRoutes.some((regex) =>
@@ -61,6 +66,9 @@ function AppContent() {
                 <Route path="/settings/severities" element={<SeveritiesList />} />
                 <Route path="/settings/severities/create" element={<CrearEditarSeverity />} />
                 <Route path="/settings/severities/edit/:id" element={<CrearEditarSeverity />} />
+                <Route path="/settings/statuses" element={<StatusesList />} />
+                <Route path="/settings/statuses/create" element={<CrearEditarStatus />} />
+                <Route path="/settings/statuses/edit/:id" element={<CrearEditarStatus />} />
             </Routes>
         </div>
     );
