@@ -4,7 +4,7 @@ import '../css/issuesTable.css';
 import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import qs from 'qs';
-const IssueTable = ({ selectedFilters }) => {
+const IssueTable = ({ selectedFilters, searchTerm }) => {
     const [issues, setIssues] = useState([]);
     const [tipusList, setTipusList] = useState([]);
     const [severityList, setSeverityList] = useState([]);
@@ -47,10 +47,15 @@ const IssueTable = ({ selectedFilters }) => {
                     });
                 }
 
+                if (searchTerm && searchTerm.trim() !== '') {
+                    params.search = searchTerm.trim();
+                }
+
                 const response = await axios.get('https://issue-tracker-c802.onrender.com/api/issues/', {
                     params,
                     paramsSerializer: params => qs.stringify(params, { arrayFormat: 'comma' })
-                });                setIssues(response.data);
+                });
+                setIssues(response.data);
             } catch (error) {
                 console.error("Error carregant les issues:", error);
             } finally {
@@ -59,7 +64,7 @@ const IssueTable = ({ selectedFilters }) => {
         };
 
         fetchIssues();
-    }, [sortBy, sortOrder, selectedFilters]);
+    }, [sortBy, sortOrder, selectedFilters, searchTerm]);
 
     const handleSort = (column) => {
         if (sortBy === column) {
