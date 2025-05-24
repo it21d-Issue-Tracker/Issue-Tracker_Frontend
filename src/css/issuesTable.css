@@ -177,3 +177,10 @@
     margin: 0;
     color: #008aa8;
 }
+
+.assign-avatars img {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    border-radius: 50%;
+}

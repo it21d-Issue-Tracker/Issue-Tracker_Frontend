@@ -12,6 +12,7 @@ const IssueTable = ({ selectedFilters, searchTerm }) => {
     const [sortBy, setSortBy] = useState('id');
     const [sortOrder, setSortOrder] = useState('asc');
     const [loading, setLoading] = useState(false);
+    const [usersCache, setUsersCache] = useState({});
 
     useEffect(() => {
         const fetchMetadata = async () => {
@@ -55,7 +56,31 @@ const IssueTable = ({ selectedFilters, searchTerm }) => {
                     params,
                     paramsSerializer: params => qs.stringify(params, { arrayFormat: 'comma' })
                 });
-                setIssues(response.data);
+                const issuesData = response.data;
+                setIssues(issuesData);
+
+                // Extraiem usernames únics assignats que no estan a la cache
+                const usernames = [...new Set(
+                    issuesData
+                        .map(issue => issue.assignat)    // suposant que 'assignat' és el username o undefined
+                        .filter(username => username && !usersCache[username])
+                )];
+
+                if (usernames.length > 0) {
+                    const usersData = {};
+                    await Promise.all(usernames.map(async (username) => {
+                        try {
+                            const res = await axios.get(`https://issue-tracker-c802.onrender.com/api/usuaris/${username}`);
+                            usersData[username] = res.data;
+                        } catch (error) {
+                            console.error(`Error carregant usuari ${username}:`, error);
+                            usersData[username] = null;
+                        }
+                    }));
+
+                    setUsersCache(prevCache => ({ ...prevCache, ...usersData }));
+                }
+
             } catch (error) {
                 console.error("Error carregant les issues:", error);
             } finally {
@@ -114,9 +139,12 @@ const IssueTable = ({ selectedFilters, searchTerm }) => {
 
                             return (
                                 <tr key={issue.id}>
-                                    <td><span className="dot" style={{ backgroundColor: tipusObj?.color || '#ccc' }}></span></td>
-                                    <td><span className="dot" style={{ backgroundColor: severityObj?.color || '#ccc' }}></span></td>
-                                    <td><span className="dot" style={{ backgroundColor: priorityObj?.color || '#ccc' }}></span></td>
+                                    <td><span className="dot"
+                                              style={{backgroundColor: tipusObj?.color || '#ccc'}}></span></td>
+                                    <td><span className="dot"
+                                              style={{backgroundColor: severityObj?.color || '#ccc'}}></span></td>
+                                    <td><span className="dot"
+                                              style={{backgroundColor: priorityObj?.color || '#ccc'}}></span></td>
                                     <td>
                                         <Link to={`/issues/${issue.id}`} className="issue-link">
                                             #{String(issue.id).slice(0, 5)}
@@ -125,19 +153,21 @@ const IssueTable = ({ selectedFilters, searchTerm }) => {
                                     <td className="status-new">{issue.estat}</td>
                                     <td>{new Date(issue.data_creacio).toLocaleDateString()}</td>
                                     <td>
-                                        {issue.assignat?.get_profile_picture_url ? (
+                                        {usersCache[issue.assignat]?.profile_picture_url ? (
                                             <span className="assign-avatars">
-                                                    <img src={issue.assignat.get_profile_picture_url} alt={issue.assignat.username} />
-                                                </span>
+                                              <img src={usersCache[issue.assignat].profile_picture_url} alt={issue.assignat}/>
+                                            </span>
                                         ) : (
-                                            'Unassigned'
+                                            issue.assignat ? issue.assignat : 'Unassigned'
                                         )}
                                     </td>
                                 </tr>
                             );
                         })
                     ) : (
-                        <tr><td colSpan="7">No issues available.</td></tr>
+                        <tr>
+                            <td colSpan="7">No issues available.</td>
+                        </tr>
                     )}
                     </tbody>
                 </table>
