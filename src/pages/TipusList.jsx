@@ -23,50 +23,70 @@ const TipusList = () => {
     fetchTipus();
   }, []);
 
+  const styles = {
+    content: {
+      marginLeft: '420px',
+      padding: '20px',
+      maxWidth: '900px',
+      marginBottom: '40px',
+    },
+  };
+
   return (
-    <div style={{ marginLeft: '5vw', paddingTop: '20px', maxWidth: '900px', marginRight: 'auto', marginBottom: '40px' }}>
-      <header style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-        <h1>Tipus</h1>
-        <Link to="/settings/tipus/create">
-          <button className="new-setting-button">+ NUEVO TIPUS</button>
-        </Link>
-      </header>
+    <>
+      <aside className="context-sidebar">
+        <ul>
+          <li><Link to="/settings/priorities">Priorities</Link></li>
+          <li><Link to="/settings/severities">Severities</Link></li>
+          <li><Link to="/settings/status">Statuses</Link></li>
+          <li><Link to="/settings/tipus">Types</Link></li>
+        </ul>
+      </aside>
 
-      {loading && <p className="loading-message">Cargando tipus...</p>}
-      {error && <p className="error-message">{error}</p>}
+      <main style={styles.content}>
+        <header style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+          <h1>Tipus</h1>
+          <Link to="/settings/tipus/create">
+            <button className="new-setting-button">+ NUEVO TIPUS</button>
+          </Link>
+        </header>
 
-      {!loading && !error && (
-        <div className="settings-list">
-          <table>
-            <thead>
-              <tr>
-                <th>COLOR</th>
-                <th>NOMBRE</th>
-                <th>ACCIONES</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tipus.length > 0 ? (
-                tipus.map(tip => (
-                  <tr key={tip.id}>
-                    <td><span className="dot" style={{ backgroundColor: tip.color }}></span></td>
-                    <td>{tip.name}</td>
-                    <td>
-                      <Link to={`/settings/tipus/edit/${tip.id}`} title="Editar">✏️</Link>
-                      <Link to={`/settings/tipus/delete/${tip.id}`} title="Eliminar">❌</Link>
-                    </td>
-                  </tr>
-                ))
-              ) : (
+        {loading && <p className="loading-message">Cargando tipus...</p>}
+        {error && <p className="error-message">{error}</p>}
+
+        {!loading && !error && (
+          <div className="settings-list">
+            <table>
+              <thead>
                 <tr>
-                  <td colSpan="3">No hay tipus disponibles.</td>
+                  <th>COLOR</th>
+                  <th>NOMBRE</th>
+                  <th>ACCIONES</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
+              </thead>
+              <tbody>
+                {tipus.length > 0 ? (
+                  tipus.map(tip => (
+                    <tr key={tip.id}>
+                      <td><span className="dot" style={{ backgroundColor: tip.color }}></span></td>
+                      <td>{tip.name}</td>
+                      <td>
+                        <Link to={`/settings/tipus/edit/${tip.id}`} title="Editar">✏️</Link>
+                        <Link to={`/settings/tipus/delete/${tip.id}`} title="Eliminar">❌</Link>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="3">No hay tipus disponibles.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </main>
+    </>
   );
 };
 
