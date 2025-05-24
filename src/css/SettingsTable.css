@@ -41,17 +41,28 @@
     white-space: nowrap;
 }
 
-/* Columna de color en settings */
-.settings-list thead th:nth-child(1),
-.settings-list tbody td:nth-child(1) { width: 15%; }
+/* Estilos para tablas con 3 columnas (Priorities, Severities) */
+.settings-list.three-columns thead th:nth-child(1),
+.settings-list.three-columns tbody td:nth-child(1) { width: 15%; }
 
-/* Columna nombre */
-.settings-list thead th:nth-child(2),
-.settings-list tbody td:nth-child(2) { width: 60%; }
+.settings-list.three-columns thead th:nth-child(2),
+.settings-list.three-columns tbody td:nth-child(2) { width: 60%; }
 
-/* Columna acciones */
-.settings-list thead th:nth-child(3),
-.settings-list tbody td:nth-child(3) { width: 25%; }
+.settings-list.three-columns thead th:nth-child(3),
+.settings-list.three-columns tbody td:nth-child(3) { width: 25%; }
+
+/* Estilos para tablas con 4 columnas (Statuses) */
+.settings-list.four-columns thead th:nth-child(1),
+.settings-list.four-columns tbody td:nth-child(1) { width: 15%; }  /* COLOR */
+
+.settings-list.four-columns thead th:nth-child(2),
+.settings-list.four-columns tbody td:nth-child(2) { width: 40%; }  /* NAME */
+
+.settings-list.four-columns thead th:nth-child(3),
+.settings-list.four-columns tbody td:nth-child(3) { width: 25%; }  /* SLUG */
+
+.settings-list.four-columns thead th:nth-child(4),
+.settings-list.four-columns tbody td:nth-child(4) { width: 20%; }  /* CLOSED */
 
 /* Punto de color */
 .dot {
@@ -120,22 +131,25 @@
     z-index: 900;
     border-left: 1px solid #ccc;
 }
+
 .context-sidebar ul {
     list-style-type: none;
     padding: 0;
     margin: 0;
 }
+
 .context-sidebar ul li {
     padding: 12px 16px;
     text-align: left;
 }
+
 .context-sidebar ul li a {
     color: #2e3440;
     text-decoration: none;
     font-weight: 500;
     display: block;
 }
+
 .context-sidebar ul li:hover {
     background-color: #d8dee9;
 }
-
