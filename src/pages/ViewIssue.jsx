@@ -5,6 +5,8 @@ import '../css/viewIssue.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import AssignedSection from "../components/AssignedSection.jsx";
 import WatchersSection from "../components/WatchersSection.jsx";
+import { useIssueMetadata } from '../hooks/useIssueMetadata';
+
 
 function ViewIssue() {
     const { id } = useParams();
@@ -23,6 +25,15 @@ function ViewIssue() {
 
     const [isDeleteIssueModalOpen, setIsDeleteIssueModalOpen] = useState(false);
     const [isDeleteAttachmentModalOpen, setIsDeleteAttachmentModalOpen] = useState(false);
+
+    const {
+        loading: loadingMeta,
+        tipus,
+        gravetat,
+        prioritat,
+        estat,
+        getColorByName
+    } = useIssueMetadata();
 
 
     useEffect(() => {
@@ -257,7 +268,7 @@ function ViewIssue() {
         }
     };
 
-    if (loading) {
+    if (loading || loadingMeta) {
         return <div className="loading">Loading...</div>;
     }
 
@@ -277,7 +288,7 @@ function ViewIssue() {
                 <div className="issue-header">
                     <div className="issue-number">#{issue.id} {issue.subject}</div>
                     <div className="issue-status">
-                        <span className="status-badge" style={{ backgroundColor: issue.estat.color }}>
+                        <span className="status-badge" style={{ backgroundColor: getColorByName(estat, issue.estat) }}>
                             {issue.estat}
                         </span>
                     </div>
@@ -393,31 +404,56 @@ function ViewIssue() {
 
             
             </div>
+            
 
             <div className="right-panel">
                 <div className="detail-row">
                     <div className="detail-label">TYPE</div>
                     <div className="detail-value">
-                        {issue.tipus}
-                        <div className="tag-color" style={{ backgroundColor: '#E44057' }}></div>
+                    {issue.tipus}
+                    <div
+                        className="tag-color"
+                        style={{
+                        backgroundColor: getColorByName(
+                            tipus,
+                            issue.tipus
+                        )
+                        }}
+                    />
                     </div>
                 </div>
 
                 <div className="detail-row">
                     <div className="detail-label">SEVERITY</div>
                     <div className="detail-value">
-                        {issue.gravetat}
-                        <div className="tag-color" style={{ backgroundColor: '#40E47C' }}></div>
+                    {issue.gravetat}
+                    <div
+                        className="tag-color"
+                        style={{
+                        backgroundColor: getColorByName(
+                            gravetat,
+                            issue.gravetat
+                        )
+                        }}
+                    />
                     </div>
                 </div>
 
                 <div className="detail-row">
                     <div className="detail-label">PRIORITY</div>
                     <div className="detail-value">
-                        {issue.prioritat}
-                        <div className="tag-color" style={{ backgroundColor: '#A8E440' }}></div>
+                    {issue.prioritat}
+                    <div
+                        className="tag-color"
+                        style={{
+                        backgroundColor: getColorByName(prioritat, issue.prioritat)
+                        }}
+                    />
                     </div>
                 </div>
+
+                <hr />
+
 
                 <hr />
                 <AssignedSection assignedUser={issue.assignat} refreshIssue={refreshIssue} />

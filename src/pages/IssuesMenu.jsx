@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import IssueTable from "../components/issueTable.jsx";
+import IssueTable from "../components/IssueTable.jsx";
 import FiltersPanel from "../components/FiltersPanel.jsx";
 import SearchBar from "../components/SearchBar.jsx";
 import '../css/issuesTable.css';
