@@ -1,136 +1,458 @@
 .login-container {
     min-height: 100vh;
+    height: 100vh;
+    width: 100vw;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #fff;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     color: #172b4d;
     padding: 0;
     margin: 0;
-    width: 100%;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
 }
 
 .login-content {
     width: 100%;
-    max-width: 500px;
-    padding: 40px;
+    max-width: 100vw;
+    padding: 40px 60px;
     box-sizing: border-box;
+    overflow-y: auto;
+    max-height: 100vh;
 }
 
 .login-header {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 50px;
 }
 
 .login-title {
-    font-size: 2.5rem;
-    font-weight: 600;
-    color: #172b4d;
-    margin: 0 0 10px 0;
+    font-size: 3rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 15px 0;
     line-height: 1.2;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .login-subtitle {
-    font-size: 1rem;
-    color: #5e6c84;
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.9);
     margin: 0;
     line-height: 1.5;
 }
 
-.users-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-    border: 1px solid #dfe1e6;
-    border-radius: 4px;
-    background-color: #dfe1e6;
-    overflow: hidden;
+.error-message {
+    color: #ff6b6b;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px 20px;
+    border-radius: 8px;
+    display: inline-block;
 }
 
-.user-item {
+.loading-spinner {
     display: flex;
+    justify-content: center;
     align-items: center;
-    padding: 20px;
-    background-color: #fff;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    border: none;
+    height: 200px;
 }
 
-.user-item:hover {
-    background-color: #f4f5f7;
-}
-
-.user-item:active {
-    background-color: #e4e5e7;
-}
-
-.user-avatar {
+.spinner {
     width: 40px;
     height: 40px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-left: 4px solid #ffffff;
     border-radius: 50%;
-    background-color: #2e3440;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.retry-button {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.retry-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+.users-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    max-width: 100%;
+}
+
+.users-row {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: nowrap;
+}
+
+.user-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 14px;
+    padding: 20px 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    flex: 1;
+    min-width: 190px;
+    max-width: 230px;
+}
+
+.user-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.user-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+    border-color: rgba(102, 126, 234, 0.3);
+}
+
+.user-card:hover::before {
+    transform: scaleX(1);
+}
+
+.user-card:active {
+    transform: translateY(-4px);
+}
+
+.user-card-header {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.user-avatar-large {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.profile-picture {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.avatar-fallback {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
-    font-weight: 600;
-    margin-right: 15px;
-    flex-shrink: 0;
+    font-size: 28px;
+    font-weight: 700;
+    border-radius: 50%;
 }
 
-.user-details {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+.user-card-body {
+    text-align: center;
+    margin-bottom: 25px;
 }
 
-.user-name {
-    font-size: 16px;
-    font-weight: 600;
+.user-name-large {
+    font-size: 20px;
+    font-weight: 700;
     color: #172b4d;
+    margin-bottom: 4px;
+    line-height: 1.2;
+}
+
+.user-username-small {
+    font-size: 14px;
+    color: #6b778c;
+    margin-bottom: 12px;
     line-height: 1.3;
 }
 
-.user-username {
+.user-bio {
+    font-size: 13px;
+    color: #5e6c84;
+    line-height: 1.4;
+    margin-bottom: 12px;
+    padding: 0 5px;
+    font-style: italic;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.user-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
     font-size: 14px;
     color: #5e6c84;
-    line-height: 1.3;
+    margin-bottom: 20px;
 }
 
-.user-arrow {
-    color: #5e6c84;
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    background-color: #36b37e;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.user-stats {
+    display: flex;
+    justify-content: space-around;
+    gap: 15px;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.stat-number {
+    font-size: 20px;
+    font-weight: 700;
+    color: #172b4d;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: #6b778c;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+}
+
+.user-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 15px;
+    border-top: 1px solid #e4e5e7;
+    margin-top: 15px;
+}
+
+.select-text {
+    font-size: 13px;
+    color: #6b778c;
+    font-weight: 500;
+}
+
+.user-arrow-large {
+    color: #667eea;
     font-size: 18px;
     font-weight: 300;
-    margin-left: 10px;
-    transition: transform 0.2s ease;
+    transition: transform 0.3s ease;
 }
 
-.user-item:hover .user-arrow {
-    transform: translateX(3px);
+.user-card:hover .user-arrow-large {
+    transform: translateX(5px);
+    color: #764ba2;
+}
+
+/* Large screens - maintain 5 cards per row */
+@media (min-width: 1400px) {
+    .login-content {
+        padding: 40px 80px;
+    }
+
+    .users-row {
+        gap: 22px;
+    }
+
+    .user-card {
+        max-width: 260px;
+        min-width: 220px;
+        padding: 25px 22px;
+    }
+}
+
+@media (min-width: 1800px) {
+    .login-content {
+        padding: 40px 100px;
+    }
+
+    .users-row {
+        gap: 25px;
+    }
+
+    .user-card {
+        max-width: 280px;
+        min-width: 240px;
+        padding: 25px 24px;
+    }
+}
+
+/* Standard desktop - 5 cards per row */
+@media (min-width: 1200px) and (max-width: 1399px) {
+    .user-card {
+        max-width: 220px;
+        min-width: 200px;
+        padding: 22px 20px;
+    }
+
+    .users-row {
+        gap: 16px;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .users-row {
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .user-card {
+        padding: 20px 15px;
+        max-width: 200px;
+        min-width: 160px;
+    }
+
+    .login-content {
+        padding: 30px 40px;
+    }
 }
 
 @media (max-width: 768px) {
     .login-content {
-        padding: 20px;
+        padding: 20px 30px;
         max-width: 100%;
+    }
+
+    .login-title {
+        font-size: 2.5rem;
+    }
+
+    .login-subtitle {
+        font-size: 1rem;
+    }
+
+    .users-container {
+        gap: 20px;
+    }
+
+    .users-row {
+        gap: 15px;
+    }
+
+    .user-card {
+        padding: 20px;
+        min-width: 180px;
+        max-width: 200px;
+    }
+
+    .user-avatar-large {
+        width: 60px;
+        height: 60px;
+    }
+
+    .avatar-fallback {
+        font-size: 24px;
+    }
+
+    .user-name-large {
+        font-size: 18px;
+    }
+
+    .user-stats {
+        gap: 8px;
+    }
+
+    .stat-number {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-container {
+        padding: 0;
+        position: relative;
+    }
+
+    .login-content {
+        padding: 20px;
     }
 
     .login-title {
         font-size: 2rem;
     }
 
-    .user-item {
-        padding: 16px;
+    .users-container {
+        gap: 15px;
     }
 
-    .user-avatar {
-        width: 36px;
-        height: 36px;
-        font-size: 16px;
-        margin-right: 12px;
+    .users-row {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .user-card {
+        padding: 15px;
+        min-width: 280px;
+        max-width: 320px;
+        width: 100%;
+    }
+
+    .user-avatar-large {
+        width: 50px;
+        height: 50px;
+    }
+
+    .avatar-fallback {
+        font-size: 20px;
+    }
+
+    .user-name-large {
+        font-size: 18px;
+    }
+
+    .user-username-small {
+        font-size: 14px;
+    }
+
+    .user-bio {
+        font-size: 13px;
     }
 }

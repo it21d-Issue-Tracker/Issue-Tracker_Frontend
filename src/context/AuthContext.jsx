@@ -3,7 +3,7 @@ import CryptoJS from 'crypto-js';
 
 const AuthContext = createContext();
 
-const USERS = [
+const HARDCODED_USERS = [
     {
         username: 'mario',
         display_name: 'Mario',
@@ -55,12 +55,21 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = (username) => {
-        const user = USERS.find(u => u.username === username);
-        if (user) {
-            setCurrentUser(user);
-            localStorage.setItem('issueTracker_currentUser', JSON.stringify(user));
+        const hardcodedUser = HARDCODED_USERS.find(u => u.username === username);
+
+        if (hardcodedUser) {
+            const userForStorage = {
+                username: hardcodedUser.username,
+                display_name: hardcodedUser.display_name,
+                color: hardcodedUser.color,
+                apiKey: hardcodedUser.apiKey
+            };
+
+            setCurrentUser(userForStorage);
+            localStorage.setItem('issueTracker_currentUser', JSON.stringify(userForStorage));
             return true;
         }
+
         return false;
     };
 
@@ -84,11 +93,11 @@ export const AuthProvider = ({ children }) => {
 
     const value = {
         currentUser,
-        users: USERS,
+        users: HARDCODED_USERS,
         login,
         logout,
         getAuthHeaders,
-        getApiKey, // Add this for easy access to API key
+        getApiKey,
         isAuthenticated: !!currentUser,
         isLoading
     };
