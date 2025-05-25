@@ -51,4 +51,7 @@ Instal·la les dependències
 ```bash
 npm install
 ```
-
+Executa l'aplicació en mode desenvolupament:
+``bash
+npm run dev
+```
