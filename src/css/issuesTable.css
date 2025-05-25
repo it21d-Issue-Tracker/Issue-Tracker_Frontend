@@ -76,7 +76,6 @@
     margin: 0;
 }
 
-/* enllaços dins la columna ISSUE encara per a fer */
 .issue-list tbody tr td:nth-child(4) a {
     color: #0090ff;
     text-decoration: underline;
@@ -134,4 +133,57 @@
 .bulk-issue-button:hover {
     background-color: #d1d1d1;
 
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    margin-right: auto;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.search-bar input[type="text"] {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px 0 0 4px;
+    outline: none;
+}
+
+.search-bar button {
+    padding: 8px 12px;
+    background-color: #008aa8;
+    color: white;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+}
+
+.search-bar button i {
+    font-size: 16px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 25px 0;
+    width: 100%;
+}
+
+.header h1 {
+    font-size: 28px;
+    margin: 0;
+    color: #008aa8;
+}
+
+.assign-avatars img {
+    width: 27px;
+    height: 27px;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+    margin: 0 auto;
+    vertical-align: middle;
 }

@@ -1,0 +1,136 @@
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #172b4d;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.login-content {
+    width: 100%;
+    max-width: 500px;
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.login-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #172b4d;
+    margin: 0 0 10px 0;
+    line-height: 1.2;
+}
+
+.login-subtitle {
+    font-size: 1rem;
+    color: #5e6c84;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.users-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    border: 1px solid #dfe1e6;
+    border-radius: 4px;
+    background-color: #dfe1e6;
+    overflow: hidden;
+}
+
+.user-item {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border: none;
+}
+
+.user-item:hover {
+    background-color: #f4f5f7;
+}
+
+.user-item:active {
+    background-color: #e4e5e7;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #2e3440;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 600;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.user-details {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.user-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #172b4d;
+    line-height: 1.3;
+}
+
+.user-username {
+    font-size: 14px;
+    color: #5e6c84;
+    line-height: 1.3;
+}
+
+.user-arrow {
+    color: #5e6c84;
+    font-size: 18px;
+    font-weight: 300;
+    margin-left: 10px;
+    transition: transform 0.2s ease;
+}
+
+.user-item:hover .user-arrow {
+    transform: translateX(3px);
+}
+
+@media (max-width: 768px) {
+    .login-content {
+        padding: 20px;
+        max-width: 100%;
+    }
+
+    .login-title {
+        font-size: 2rem;
+    }
+
+    .user-item {
+        padding: 16px;
+    }
+
+    .user-avatar {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+        margin-right: 12px;
+    }
+}

@@ -1,0 +1,111 @@
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9999;
+}
+
+.modal {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  font-family: sans-serif;
+}
+
+.modal h2 {
+  margin-top: 0;
+  font-size: 1.5rem;
+}
+
+.modal p {
+  margin: 1rem 0;
+}
+
+.modal-error {
+  color: red;
+  margin-top: 0.5rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.confirm-button {
+  background-color: #c0392b;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.confirm-button:hover {
+  background-color: #a93226;
+}
+
+.cancel-button {
+  background-color: #bdc3c7;
+  color: #2c3e50;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cancel-button:hover {
+  background-color: #a6acaf;
+}
+
+/* NUEVO: Wrapper de la fila Tipus + select + botón */
+.modal-select-wrapper {
+  display: flex;
+  align-items: center;
+  background-color: #dbe3ed;
+  padding: 5px 10px;
+  border-radius: 10px;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+/* Etiqueta "Tipus:" */
+.modal-select-label {
+  font-weight: bold;
+  color: #1a1a1a;
+  min-width: 50px;
+}
+
+/* Estilo del selector */
+.modal-select {
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: white;
+  cursor: pointer;
+  font-size: 12px;
+  color: #2e3440;
+  padding: 3px 6px;
+  outline: none;
+  min-width: 100px;
+  appearance: none;
+}
+
+.modal-select:hover {
+  border-color: #228eaf;
+  color: #228eaf;
+}
+
+/* Botón rojo redondo */
+.modal-round-button {
+  width: 16px;
+  height: 16px;
+  background-color: #d64545;
+  border-radius: 50%;
+  border: none;
+  cursor: default;
+}
+
