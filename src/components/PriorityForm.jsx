@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../css/settingsFormPage.css';
+import {useAuth} from "../context/AuthContext.jsx";
 
 export default function PriorityForm({ isEdit }) {
   const navigate = useNavigate();
   const { id } = useParams();
   const [name, setName] = useState('');
   const [color, setColor] = useState('');
+  const { getAuthHeaders } = useAuth();
 
   const coloresPredefinidos = [
     '#ff5733', '#33ff57', '#3357ff',
@@ -43,10 +45,7 @@ export default function PriorityForm({ isEdit }) {
     try {
       const res = await fetch(url, {
         method,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': '3c3c0b2b3b69b41bc08455370210a9c44d3c507be9ed4f9d9724003f0fa5fcdf'
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify(payload),
       });
 

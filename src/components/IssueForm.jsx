@@ -3,10 +3,12 @@ import CaracteristicaSelect from './CaracteristicaSelect.jsx';
 import axios from 'axios';
 import {useNavigate, useParams} from 'react-router-dom';
 import '../css/issueFormPage.css';
+import {useAuth} from "../context/AuthContext.jsx";
 
 export default function IssueForm({ isEdit }) {
     const navigate = useNavigate();
     const { id } = useParams();
+    const { getAuthHeaders } = useAuth();
     const [formData, setFormData] = useState({
         subject: '',
         descripcio: '',
@@ -91,10 +93,7 @@ export default function IssueForm({ isEdit }) {
         e.preventDefault();
 
         try {
-            const headers = {
-                Authorization: 'a0e9e8d35f67afa31eb5fab93182bdf93540ee30409234dab4e5b38a453b7983',
-                'Content-Type': 'application/json',
-            };
+            const headers = getAuthHeaders();
 
             const data = {
                 subject: formData.subject,

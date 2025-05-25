@@ -6,6 +6,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import AssignedSection from "../components/AssignedSection.jsx";
 import WatchersSection from "../components/WatchersSection.jsx";
 import { useIssueMetadata } from '../hooks/useIssueMetadata';
+import {useAuth} from "../context/AuthContext.jsx";
 
 
 function ViewIssue() {
@@ -25,6 +26,8 @@ function ViewIssue() {
 
     const [isDeleteIssueModalOpen, setIsDeleteIssueModalOpen] = useState(false);
     const [isDeleteAttachmentModalOpen, setIsDeleteAttachmentModalOpen] = useState(false);
+    const { getAuthHeaders } = useAuth();
+
 
     const {
         loading: loadingMeta,
@@ -83,18 +86,14 @@ function ViewIssue() {
         }
     }, [id]);
 
-    // Función para obtener el perfil del usuario
     const fetchUserProfile = async (username) => {
-        // Si ya tenemos el perfil, no lo volvemos a cargar
         if (userProfiles[username]) {
             return userProfiles[username];
         }
 
         try {
             const response = await fetch(`https://issue-tracker-c802.onrender.com/api/usuaris/${username}/`, {
-                headers: {
-                    'Authorization': '5d835a42496a91a23a02fe988257a1d7ae6e4561399843f71275e010cf398e43'
-                }
+                headers: getAuthHeaders(),
             });
             
             if (response.ok) {
@@ -111,7 +110,6 @@ function ViewIssue() {
         return null;
     };
 
-    // Función para cargar comentarios
     const fetchComments = async () => {
         try {
             setLoadingComments(true);
@@ -121,7 +119,6 @@ function ViewIssue() {
                 const comments = Array.isArray(commentsData) ? commentsData : [];
                 setComments(comments);
                 
-                // Cargar perfiles de usuarios únicos
                 const uniqueUsers = [...new Set(comments.map(comment => comment.autor))];
                 uniqueUsers.forEach(username => {
                     fetchUserProfile(username);
@@ -134,7 +131,6 @@ function ViewIssue() {
         }
     };
 
-    // Función para enviar nuevo comentario
     const handleSubmitComment = async (e) => {
         e.preventDefault();
         if (!newComment.trim()) return;
@@ -143,10 +139,7 @@ function ViewIssue() {
             setSubmittingComment(true);
             const response = await fetch('https://issue-tracker-c802.onrender.com/api/comentaris/', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': '5d835a42496a91a23a02fe988257a1d7ae6e4561399843f71275e010cf398e43'
-                },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({
                     text: newComment,
                     issue: parseInt(id)
@@ -159,7 +152,6 @@ function ViewIssue() {
             setComments(prev => [...prev, newCommentData]);
             setNewComment('');
             
-            // Cargar perfil del autor del nuevo comentario
             fetchUserProfile(newCommentData.autor);
             
         } catch (err) {
@@ -182,9 +174,7 @@ function ViewIssue() {
         try {
             const response = await fetch('https://issue-tracker-c802.onrender.com/api/attachments/', {
                 method: 'POST',
-                headers: {
-                    'Authorization': '5d835a42496a91a23a02fe988257a1d7ae6e4561399843f71275e010cf398e43'
-                },
+                headers: getAuthHeaders(),
                 body: formData
             });
 
@@ -208,9 +198,7 @@ function ViewIssue() {
         try {
             const response = await fetch(`https://issue-tracker-c802.onrender.com/api/attachments/${attachmentToDelete.id}/`, {
             method: 'DELETE',
-            headers: {
-                'Authorization': '5d835a42496a91a23a02fe988257a1d7ae6e4561399843f71275e010cf398e43'
-            }
+            headers: getAuthHeaders(),
             });
 
             if (response.status === 204) {
@@ -343,7 +331,6 @@ function ViewIssue() {
                 <div className="comments-section">
                   <button className="active">Comments</button>
                 </div>
-                    {/* Formulario para nuevo comentario */}
                     <form onSubmit={handleSubmitComment} className="new-comment-form">
                         <div className="input-wrapper">
                             <textarea
@@ -371,7 +358,6 @@ function ViewIssue() {
                                 {comments.map(comentari => (
                                     <div key={comentari.id}>
                                         <div className="comentari">
-                                            {/* Foto de perfil */}
                                             <div className="profile-picture">
                                                 <img 
                                                     src={userProfiles[comentari.autor]?.profile_picture_url || '/default-avatar.png'} 
@@ -381,14 +367,11 @@ function ViewIssue() {
                                                     }}
                                                 />
                                             </div>
-                                            {/* Contenido del comentario */}
                                             <div className="comment-content">
-                                                {/* Nombre del usuario y fecha */}
                                                 <div className="comment-header">
                                                     <strong className="username">{comentari.autor}</strong>
                                                     <span className="comment-date">{formatCommentDate(comentari.data)}</span>
                                                 </div>
-                                                {/* Texto del comentario */}
                                                 <div className="comment-text">
                                                     {comentari.text}
                                                 </div>
@@ -451,9 +434,6 @@ function ViewIssue() {
                     />
                     </div>
                 </div>
-
-                <hr />
-
 
                 <hr />
                 <AssignedSection assignedUser={issue.assignat} refreshIssue={refreshIssue} />

@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import '../css/assignedAndWatchers.css';
 import { useNavigate, useParams } from "react-router-dom";
 import DeleteModal from "./deleteModal.jsx";
+import {useAuth} from "../context/AuthContext.jsx";
 
 export default function WatchersSection({ watchers, refreshIssue }) {
     const [showModal, setShowModal] = useState(false);
     const [userToRemove, setUserToRemove] = useState(null);
     const navigate = useNavigate();
     const { id } = useParams();
+    const { getAuthHeaders } = useAuth();
 
     const handleAddWatcher = () => {
         navigate(`/issues/${id}/watchers`);
@@ -17,10 +19,7 @@ export default function WatchersSection({ watchers, refreshIssue }) {
         const updatedWatchers = watchers.filter(w => w !== userToRemove);
         const response = await fetch(`https://issue-tracker-c802.onrender.com/api/issues/${id}/watchers/`, {
             method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'a0e9e8d35f67afa31eb5fab93182bdf93540ee30409234dab4e5b38a453b7983',
-            },
+            headers: getAuthHeaders(),
             body: JSON.stringify({ watchers: updatedWatchers }),
         });
 

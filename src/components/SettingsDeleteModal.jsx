@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { createPortal } from 'react-dom';
 import '../css/modal.css';
-import {AuthProvider} from "../context/AuthContext.jsx";
+import {AuthProvider, useAuth} from "../context/AuthContext.jsx";
 
 const SettingsDeleteModal = ({
   isOpen,
@@ -16,6 +16,8 @@ const SettingsDeleteModal = ({
   const [options, setOptions] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const { getAuthHeaders } = useAuth();
+
 
   useEffect(() => {
     if (isOpen) {
@@ -39,10 +41,7 @@ const SettingsDeleteModal = ({
     try {
       const response = await fetch(`${apiEndpoint}${itemId}/delete_with_replacement/`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AuthProvider.currentUser.getApiKey(),
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify({ sustituto: replacementId }),
       });
 

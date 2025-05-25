@@ -3,6 +3,7 @@ import '../css/issueFormPage.css';
 import {useEffect, useState} from "react";
 import DueDateForm from "../components/DueDateForm.jsx";
 import DeleteModal from "../components/deleteModal.jsx";
+import {useAuth} from "../context/AuthContext.jsx";
 
 function formatDateForInput(dateString) {
     if (!dateString) return '';
@@ -17,6 +18,8 @@ export default function AfegirDueDate() {
     const [dueDate, setDueDate] = useState('');
     const [comment, setComment] = useState('');
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const { getAuthHeaders } = useAuth();
+
 
     useEffect(() => {
         fetch(`https://issue-tracker-c802.onrender.com/api/issues/${id}`)
@@ -31,10 +34,7 @@ export default function AfegirDueDate() {
         e.preventDefault();
         fetch(`https://issue-tracker-c802.onrender.com/api/issues/${id}/due-date/`, {
             method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: 'a0e9e8d35f67afa31eb5fab93182bdf93540ee30409234dab4e5b38a453b7983'
-            },
+            headers: getAuthHeaders(),
             body: JSON.stringify({ due_date: dueDate, due_date_comment: comment }),
         }).then(() => navigate(`/issues/${id}`));
     };
@@ -45,10 +45,7 @@ export default function AfegirDueDate() {
     const deleteDueDate = async () => {
         const response = await fetch(`https://issue-tracker-c802.onrender.com/api/issues/${id}/due-date/`, {
             method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': '5d835a42496a91a23a02fe988257a1d7ae6e4561399843f71275e010cf398e43'
-            },
+            headers: getAuthHeaders(),
         });
 
         if (!response.ok) {

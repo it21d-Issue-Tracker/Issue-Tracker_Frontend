@@ -3,6 +3,7 @@ import {useEffect, useState} from 'react';
 import UserSelector from "../components/UserSelector.jsx";
 import axios from "axios";
 import '../css/assignedAndWatchers.css';
+import {useAuth} from "../context/AuthContext.jsx";
 
 export default function AfegirAssignat() {
     const { id } = useParams();
@@ -10,6 +11,8 @@ export default function AfegirAssignat() {
     const [selectedUser, setSelectedUser] = useState(null);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { getAuthHeaders } = useAuth();
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -37,12 +40,9 @@ export default function AfegirAssignat() {
         e.preventDefault();
         await axios.patch(
             `https://issue-tracker-c802.onrender.com/api/issues/${id}/assignat/`,
-            { assignat: selectedUser }, // selectedUser és el username o null per deseleccionar
+            { assignat: selectedUser },
             {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: 'a0e9e8d35f67afa31eb5fab93182bdf93540ee30409234dab4e5b38a453b7983',
-                },
+                headers: getAuthHeaders(),
             }
         );
         navigate(`/issues/${id}`);

@@ -2,11 +2,14 @@ import React, {useState} from "react";
 import '../css/assignedAndWatchers.css';
 import {useNavigate, useParams} from "react-router-dom";
 import DeleteModal from "./deleteModal.jsx";
+import {useAuth} from "../context/AuthContext.jsx";
 
 export default function AssignedSection({ assignedUser, refreshIssue }) {
     const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
     const { id } = useParams();
+    const { getAuthHeaders } = useAuth();
+
     const handleAddAssigned = () => {
         navigate(`/issues/${id}/assign`);
     };
@@ -14,10 +17,7 @@ export default function AssignedSection({ assignedUser, refreshIssue }) {
     const unassignUser = async () => {
         const response = await fetch(`https://issue-tracker-c802.onrender.com/api/issues/${id}/assignat/`, {
             method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'a0e9e8d35f67afa31eb5fab93182bdf93540ee30409234dab4e5b38a453b7983',
-            },
+            headers: getAuthHeaders(),
             body: JSON.stringify({ assignat: null }),
         });
 
