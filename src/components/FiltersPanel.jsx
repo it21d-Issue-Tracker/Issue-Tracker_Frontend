@@ -25,12 +25,12 @@ function FiltersPanel({ selectedFilters, setSelectedFilters }) {
     useEffect(() => {
         const fetchOptions = async () => {
             const endpoints = {
-                tipus: `${API_BASE}/tipus`,
-                gravetat: `${API_BASE}/severity`,
-                estat: `${API_BASE}/statuses`,
-                prioritat: `${API_BASE}/priorities`,
-                creador: `${API_BASE}/usuaris`,
-                assignat: `${API_BASE}/usuaris`,
+                tipus: `${API_BASE}/tipus/`,
+                gravetat: `${API_BASE}/severity/`,
+                estat: `${API_BASE}/statuses/`,
+                prioritat: `${API_BASE}/priorities/`,
+                creador: `${API_BASE}/usuaris/`,
+                assignat: `${API_BASE}/usuaris/`,
             };
 
             for (const key in endpoints) {
