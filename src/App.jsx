@@ -179,7 +179,7 @@ function AppContent() {
 
 export default function App() {
     return (
-        <Router>
+        <Router basename="/Issue-Tracker_Frontend">
             <AuthProvider>
                 <AppContent />
             </AuthProvider>
