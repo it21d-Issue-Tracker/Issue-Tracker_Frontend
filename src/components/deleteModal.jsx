@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
+import {useAuth} from "../context/AuthContext.jsx";
 
 /**
  * DeleteModal - Componente Modal de eliminación adaptado para React Router
@@ -30,8 +31,10 @@ export default function DeleteModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { getAuthHeaders } = useAuth();
 
-  if (!isOpen) return null;
+
+    if (!isOpen) return null;
 
   const handleDelete = async () => {
     setIsSubmitting(true);
@@ -43,10 +46,7 @@ export default function DeleteModal({
       } else {
         const response = await fetch(`${apiEndpoint}/${itemId}/`, {
           method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': '5d835a42496a91a23a02fe988257a1d7ae6e4561399843f71275e010cf398e43',
-          },
+          headers: getAuthHeaders(),
         });
 
         if (!response.ok) {

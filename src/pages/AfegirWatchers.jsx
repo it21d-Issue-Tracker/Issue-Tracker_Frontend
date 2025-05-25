@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import axios from "axios";
 import MultiUserSelector from '../components/MultiUserSelector.jsx';
 import '../css/assignedAndWatchers.css';
+import {useAuth} from "../context/AuthContext.jsx";
 
 export default function AddWatchersPage() {
     const { id } = useParams();
@@ -10,6 +11,7 @@ export default function AddWatchersPage() {
     const [users, setUsers] = useState([]);
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { getAuthHeaders } = useAuth();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -37,10 +39,7 @@ export default function AddWatchersPage() {
             `https://issue-tracker-c802.onrender.com/api/issues/${id}/watchers/`,
             { watchers: selectedUsers },
             {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: 'a0e9e8d35f67afa31eb5fab93182bdf93540ee30409234dab4e5b38a453b7983',
-                },
+                headers: getAuthHeaders(),
             }
         );
         navigate(`/issues/${id}`);

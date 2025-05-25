@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../css/issueFormPage.css';
+import {useAuth} from "../context/AuthContext.jsx";
 
 export default function BulkInsertForm() {
     const navigate = useNavigate();
@@ -10,6 +11,7 @@ export default function BulkInsertForm() {
     });
     const [errors, setErrors] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const { getAuthHeaders } = useAuth();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -40,10 +42,7 @@ export default function BulkInsertForm() {
                 titol: line
             }));
 
-            const headers = {
-                Authorization: 'a0e9e8d35f67afa31eb5fab93182bdf93540ee30409234dab4e5b38a453b7983',
-                'Content-Type': 'application/json',
-            };
+            const headers = getAuthHeaders();
 
             await axios.post(
                 'https://issue-tracker-c802.onrender.com/api/issues/bulk-insert/',
