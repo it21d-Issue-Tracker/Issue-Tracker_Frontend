@@ -111,15 +111,15 @@ export default function IssueForm({ isEdit }) {
                     data,
                     { headers }
                 );
+                navigate(`/issues/${id}`)
             } else {
                 await axios.post(
                     'https://issue-tracker-c802.onrender.com/api/issues/',
                     data,
                     {headers}
                 );
+                navigate('/issues');
             }
-
-            navigate('/issues');
 
         } catch (error) {
             console.error(`Error al ${isEdit ? 'editar' : 'crear'} la issue:`, error.response?.data || error.message);
