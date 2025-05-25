@@ -1,25 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import '../css/SettingsTable.css'; // Mismo CSS compartido
+import '../css/SettingsTable.css';
+import SettingsDeleteModal from '../components/SettingsDeleteModal';
 
 const SeveritiesList = () => {
   const [severities, setSeverities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedSeverity, setSelectedSeverity] = useState(null);
+
+  const fetchSeverities = async () => {
+    try {
+      const res = await fetch('https://issue-tracker-c802.onrender.com/api/severity/');
+      if (!res.ok) throw new Error('Error fetching severities');
+      const data = await res.json();
+      setSeverities(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchSeverities = async () => {
-      try {
-        const res = await fetch('https://issue-tracker-c802.onrender.com/api/severity/');
-        if (!res.ok) throw new Error('Error fetching severities');
-        const data = await res.json();
-        setSeverities(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchSeverities();
   }, []);
 
@@ -31,9 +35,13 @@ const SeveritiesList = () => {
     },
   };
 
+  const openDeleteModal = (severity) => {
+    setSelectedSeverity(severity);
+    setModalOpen(true);
+  };
+
   return (
     <>
-      {/* Sidebar */}
       <aside className="context-sidebar">
         <ul>
           <li><Link to="/settings/priorities">Priorities</Link></li>
@@ -43,7 +51,6 @@ const SeveritiesList = () => {
         </ul>
       </aside>
 
-      {/* Main content */}
       <main style={styles.content}>
         <header style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
           <h1>Severities</h1>
@@ -73,20 +80,34 @@ const SeveritiesList = () => {
                       <td>{severity.name}</td>
                       <td>
                         <Link to={`/settings/severities/edit/${severity.id}`} title="Edit">✏️</Link>
-                        <Link to={`/settings/severities/delete/${severity.id}`} title="Delete">❌</Link>
+                        <button
+                          onClick={() => openDeleteModal(severity)}
+                          title="Delete"
+                          style={{ background: 'none', border: 'none', cursor: 'pointer', marginLeft: '0.5rem' }}
+                        >
+                          ❌
+                        </button>
                       </td>
                     </tr>
                   ))
                 ) : (
-                  <tr>
-                    <td colSpan="3">No severities available.</td>
-                  </tr>
+                  <tr><td colSpan="3">No severities available.</td></tr>
                 )}
               </tbody>
             </table>
           </div>
         )}
       </main>
+
+      <SettingsDeleteModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        itemId={selectedSeverity?.id}
+        itemName={selectedSeverity?.name}
+        entityType="severity"
+        apiEndpoint="https://issue-tracker-c802.onrender.com/api/severity/"
+        onDeleteSuccess={fetchSeverities}
+      />
     </>
   );
 };
