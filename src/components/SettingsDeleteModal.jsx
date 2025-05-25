@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { createPortal } from 'react-dom';
-import '../css/Modal.css';
+import '../css/modal.css';
 import {AuthProvider} from "../context/AuthContext.jsx";
 
 const SettingsDeleteModal = ({
