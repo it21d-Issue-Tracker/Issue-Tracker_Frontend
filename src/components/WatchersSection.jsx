@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import '../css/assignedAndWatchers.css';
 import { useNavigate, useParams } from "react-router-dom";
 import DeleteModal from "./deleteModal.jsx";
-import {useAuth} from "../context/AuthContext.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 
 export default function WatchersSection({ watchers, refreshIssue }) {
     const [showModal, setShowModal] = useState(false);
     const [userToRemove, setUserToRemove] = useState(null);
     const navigate = useNavigate();
     const { id } = useParams();
-    const { getAuthHeaders } = useAuth();
+    const { getAuthHeaders, currentUser } = useAuth();
 
     const handleAddWatcher = () => {
         navigate(`/issues/${id}/watchers`);
@@ -32,23 +32,34 @@ export default function WatchersSection({ watchers, refreshIssue }) {
         navigate(`/issues/${id}`);
     };
 
-   /* Implementar quan ja hi hagi usuaris loguejats
-   const handleWatchSelf = async () => {
-        const response = await fetch(`https://issue-tracker-c802.onrender.com/api/issues/${id}/watchers/`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': '...tu_token...',
-            },
-            body: JSON.stringify({ watcher: currentUser }),
-        });
-
-        if (!response.ok) {
-            throw new Error('No se pudo añadir como watcher');
+    const watchSelf = async () => {
+        if (!currentUser) {
+            console.error('No hay usuario autenticado');
+            return;
         }
 
-        await refreshIssue();
-    };*/
+        if (watchers.includes(currentUser.username)) return;
+
+        const updatedWatchers = [...watchers, currentUser.username];
+
+        try {
+            const response = await fetch(`https://issue-tracker-c802.onrender.com/api/issues/${id}/watchers/`, {
+                method: 'PATCH',
+                headers: getAuthHeaders(),
+                body: JSON.stringify({ watchers: updatedWatchers }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                console.error(errorData.detail || `Error ${response.status}: No se pudo añadir el watcher`);
+                return;
+            }
+
+            await refreshIssue();
+        } catch (error) {
+            console.error('Error añadiendo watcher:', error);
+        }
+    };
 
     return (
         <div className="watchers-section">
@@ -86,9 +97,12 @@ export default function WatchersSection({ watchers, refreshIssue }) {
                 <button className="add-watcher-button" onClick={handleAddWatcher}>
                     + Add watcher
                 </button>
-                <button className="watch-button" /*onClick={handleWatchSelf}*/>
-                    <i className="fa-solid fa-eye"></i> Watch this issue
-                </button>
+
+                {currentUser && !watchers.includes(currentUser.username) && (
+                    <button className="watch-button" onClick={watchSelf}>
+                        <i className="fa-solid fa-eye"></i> Watch this issue
+                    </button>
+                )}
             </div>
         </div>
     );
