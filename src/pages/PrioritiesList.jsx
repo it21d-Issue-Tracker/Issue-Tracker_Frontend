@@ -1,25 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import '../css/SettingsTable.css'; // Asegúrate de que aquí esté tu estilo general
+import '../css/SettingsTable.css';
+import SettingsDeleteModal from '../components/SettingsDeleteModal';
 
 const PrioritiesList = () => {
   const [priorities, setPriorities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedPriority, setSelectedPriority] = useState(null);
+
+  const fetchPriorities = async () => {
+    try {
+      const res = await fetch('https://issue-tracker-c802.onrender.com/api/priorities/');
+      if (!res.ok) throw new Error('Error fetching priorities');
+      const data = await res.json();
+      setPriorities(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchPriorities = async () => {
-      try {
-        const res = await fetch('https://issue-tracker-c802.onrender.com/api/priorities/');
-        if (!res.ok) throw new Error('Error fetching priorities');
-        const data = await res.json();
-        setPriorities(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchPriorities();
   }, []);
 
@@ -31,9 +35,13 @@ const PrioritiesList = () => {
     },
   };
 
+  const openDeleteModal = (priority) => {
+    setSelectedPriority(priority);
+    setModalOpen(true);
+  };
+
   return (
     <>
-      {/* Sidebar */}
       <aside className="context-sidebar">
         <ul>
           <li><Link to="/settings/priorities">Priorities</Link></li>
@@ -43,7 +51,6 @@ const PrioritiesList = () => {
         </ul>
       </aside>
 
-      {/* Main content */}
       <main style={styles.content}>
         <header style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
           <h1>Priorities</h1>
@@ -73,20 +80,34 @@ const PrioritiesList = () => {
                       <td>{priority.name}</td>
                       <td>
                         <Link to={`/settings/priorities/edit/${priority.id}`} title="Edit">✏️</Link>
-                        <Link to={`/settings/priorities/delete/${priority.id}`} title="Delete">❌</Link>
+                        <button
+                          onClick={() => openDeleteModal(priority)}
+                          title="Delete"
+                          style={{ background: 'none', border: 'none', cursor: 'pointer', marginLeft: '0.5rem' }}
+                        >
+                          ❌
+                        </button>
                       </td>
                     </tr>
                   ))
                 ) : (
-                  <tr>
-                    <td colSpan="3">No priorities available.</td>
-                  </tr>
+                  <tr><td colSpan="3">No priorities available.</td></tr>
                 )}
               </tbody>
             </table>
           </div>
         )}
       </main>
+
+      <SettingsDeleteModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        itemId={selectedPriority?.id}
+        itemName={selectedPriority?.name}
+        entityType="priority"
+        apiEndpoint="https://issue-tracker-c802.onrender.com/api/priorities/"
+        onDeleteSuccess={fetchPriorities}
+      />
     </>
   );
 };
