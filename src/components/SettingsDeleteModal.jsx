@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { createPortal } from 'react-dom';
 import '../css/Modal.css';
+import {AuthProvider} from "../context/AuthContext.jsx";
 
 const SettingsDeleteModal = ({
   isOpen,
@@ -40,7 +41,7 @@ const SettingsDeleteModal = ({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': '3c3c0b2b3b69b41bc08455370210a9c44d3c507be9ed4f9d9724003f0fa5fcdf',
+          'Authorization': AuthProvider.currentUser.getApiKey(),
         },
         body: JSON.stringify({ sustituto: replacementId }),
       });
