@@ -11,7 +11,7 @@ const TipusList = () => {
     const fetchTipus = async () => {
       try {
         const res = await fetch('https://issue-tracker-c802.onrender.com/api/tipus/');
-        if (!res.ok) throw new Error("Error al obtener los tipus");
+        if (!res.ok) throw new Error("Error fetching types");
         const data = await res.json();
         setTipus(data);
       } catch (err) {
@@ -25,10 +25,9 @@ const TipusList = () => {
 
   const styles = {
     content: {
-      marginLeft: '420px',
-      padding: '20px',
-      maxWidth: '900px',
-      marginBottom: '40px',
+      marginLeft: '360px',
+      padding: '40px',
+      maxWidth: '1200px',
     },
   };
 
@@ -38,20 +37,20 @@ const TipusList = () => {
         <ul>
           <li><Link to="/settings/priorities">Priorities</Link></li>
           <li><Link to="/settings/severities">Severities</Link></li>
-          <li><Link to="/settings/status">Statuses</Link></li>
+          <li><Link to="/settings/statuses">Statuses</Link></li>
           <li><Link to="/settings/tipus">Types</Link></li>
         </ul>
       </aside>
 
       <main style={styles.content}>
         <header style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-          <h1>Tipus</h1>
+          <h1>Types</h1>
           <Link to="/settings/tipus/create">
-            <button className="new-setting-button">+ NUEVO TIPUS</button>
+            <button className="new-setting-button">+ NEW TYPE</button>
           </Link>
         </header>
 
-        {loading && <p className="loading-message">Cargando tipus...</p>}
+        {loading && <p className="loading-message">Loading types...</p>}
         {error && <p className="error-message">{error}</p>}
 
         {!loading && !error && (
@@ -60,8 +59,8 @@ const TipusList = () => {
               <thead>
                 <tr>
                   <th>COLOR</th>
-                  <th>NOMBRE</th>
-                  <th>ACCIONES</th>
+                  <th>NAME</th>
+                  <th>ACTIONS</th>
                 </tr>
               </thead>
               <tbody>
@@ -71,14 +70,14 @@ const TipusList = () => {
                       <td><span className="dot" style={{ backgroundColor: tip.color }}></span></td>
                       <td>{tip.name}</td>
                       <td>
-                        <Link to={`/settings/tipus/edit/${tip.id}`} title="Editar">✏️</Link>
-                        <Link to={`/settings/tipus/delete/${tip.id}`} title="Eliminar">❌</Link>
+                        <Link to={`/settings/tipus/edit/${tip.id}`} title="Edit">✏️</Link>
+                        <Link to={`/settings/tipus/delete/${tip.id}`} title="Delete">❌</Link>
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="3">No hay tipus disponibles.</td>
+                    <td colSpan="3">No types available.</td>
                   </tr>
                 )}
               </tbody>

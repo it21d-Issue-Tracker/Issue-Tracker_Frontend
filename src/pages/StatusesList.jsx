@@ -1,26 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import '../css/SettingsTable.css'; // Mismo CSS compartido
+import '../css/SettingsTable.css';
 
-const SeveritiesList = () => {
-  const [severities, setSeverities] = useState([]);
+const StatusesList = () => {
+  const [statuses, setStatuses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchSeverities = async () => {
+    const fetchStatuses = async () => {
       try {
-        const res = await fetch('https://issue-tracker-c802.onrender.com/api/severity/');
-        if (!res.ok) throw new Error('Error fetching severities');
+        const res = await fetch('https://issue-tracker-c802.onrender.com/api/statuses/');
+        if (!res.ok) throw new Error('Error fetching statuses');
         const data = await res.json();
-        setSeverities(data);
+        setStatuses(data);
       } catch (err) {
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-    fetchSeverities();
+    fetchStatuses();
   }, []);
 
   const styles = {
@@ -46,13 +46,13 @@ const SeveritiesList = () => {
       {/* Main content */}
       <main style={styles.content}>
         <header style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-          <h1>Severities</h1>
-          <Link to="/settings/severities/create">
-            <button className="new-setting-button">+ NEW SEVERITY</button>
+          <h1>Statuses</h1>
+          <Link to="/settings/status/create">
+            <button className="new-setting-button">+ NEW STATUS</button>
           </Link>
         </header>
 
-        {loading && <p className="loading-message">Loading severities...</p>}
+        {loading && <p className="loading-message">Loading statuses...</p>}
         {error && <p className="error-message">{error}</p>}
 
         {!loading && !error && (
@@ -62,24 +62,28 @@ const SeveritiesList = () => {
                 <tr>
                   <th>COLOR</th>
                   <th>NAME</th>
+                  <th>SLUG</th>
+                  <th>CLOSED</th>
                   <th>ACTIONS</th>
                 </tr>
               </thead>
               <tbody>
-                {severities.length > 0 ? (
-                  severities.map(severity => (
-                    <tr key={severity.id}>
-                      <td><span className="dot" style={{ backgroundColor: severity.color }}></span></td>
-                      <td>{severity.name}</td>
+                {statuses.length > 0 ? (
+                  statuses.map(status => (
+                    <tr key={status.id}>
+                      <td><span className="dot" style={{ backgroundColor: status.color }}></span></td>
+                      <td>{status.name}</td>
+                      <td>{status.slug}</td>
+                      <td>{status.closed ? 'Yes' : 'No'}</td>
                       <td>
-                        <Link to={`/settings/severities/edit/${severity.id}`} title="Edit">✏️</Link>
-                        <Link to={`/settings/severities/delete/${severity.id}`} title="Delete">❌</Link>
+                        <Link to={`/settings/status/edit/${status.id}`} title="Edit">✏️</Link>
+                        <Link to={`/settings/status/delete/${status.id}`} title="Delete">❌</Link>
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="3">No severities available.</td>
+                    <td colSpan="5">No statuses available.</td>
                   </tr>
                 )}
               </tbody>
@@ -91,4 +95,4 @@ const SeveritiesList = () => {
   );
 };
 
-export default SeveritiesList;
+export default StatusesList;
