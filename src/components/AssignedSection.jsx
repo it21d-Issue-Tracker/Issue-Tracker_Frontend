@@ -1,14 +1,13 @@
-import React, {useState} from "react";
-import '../css/assignedAndWatchers.css';
-import {useNavigate, useParams} from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import DeleteModal from "./deleteModal.jsx";
-import {useAuth} from "../context/AuthContext.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 
 export default function AssignedSection({ assignedUser, refreshIssue }) {
     const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
     const { id } = useParams();
-    const { getAuthHeaders } = useAuth();
+    const { getAuthHeaders, currentUser } = useAuth();
 
     const handleAddAssigned = () => {
         navigate(`/issues/${id}/assign`);
@@ -27,6 +26,31 @@ export default function AssignedSection({ assignedUser, refreshIssue }) {
         }
         await refreshIssue();
         navigate(`/issues/${id}`);
+    };
+
+    const assignToMe = async () => {
+        if (!currentUser) {
+            console.error('No hay usuario autenticado');
+            return;
+        }
+
+        try {
+            const response = await fetch(`https://issue-tracker-c802.onrender.com/api/issues/${id}/assignat/`, {
+                method: 'PATCH',
+                headers: getAuthHeaders(),
+                body: JSON.stringify({ assignat: currentUser.username }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                console.error(errorData.detail || `Error ${response.status}: No se pudo asignar el usuario`);
+                return;
+            }
+
+            await refreshIssue();
+        } catch (error) {
+            console.error('Error asignando la issue a ti mismo:', error);
+        }
     };
 
     return (
@@ -59,8 +83,12 @@ export default function AssignedSection({ assignedUser, refreshIssue }) {
                 <button className="add-watcher-button" onClick={handleAddAssigned}>
                     + Add assigned
                 </button>
-                <button className="watch-button"><i className="fa-solid fa-eye"></i> Assign to me</button>
-                {/* boto assign to me encara per implementar */}
+
+                {currentUser && assignedUser !== currentUser.username && (
+                    <button className="watch-button" onClick={assignToMe}>
+                        <i className="fa-solid fa-user-plus"></i> Assign to me
+                    </button>
+                )}
             </div>
         </div>
     );
