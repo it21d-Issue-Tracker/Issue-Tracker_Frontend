@@ -428,6 +428,17 @@ hr {
     font-weight: bold;
 }
 
+.username-link {
+  color: #008aa8;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.username-link:hover {
+  text-decoration: none;
+  color: black;
+}
+
 .comment-date {
     color: #888;
     font-size: 0.9em;

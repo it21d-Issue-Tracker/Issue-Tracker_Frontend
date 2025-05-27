@@ -76,10 +76,13 @@
     margin: 0;
 }
 
-.issue-list tbody tr td:nth-child(4) a {
-    color: #0090ff;
-    text-decoration: underline;
-    font-weight: normal;
+.issue-list tbody tr td:nth-child(4) a.issue-link {
+    text-decoration: none;
+}
+
+.issue-list tbody tr td:nth-child(4) a.issue-link:hover {
+    text-decoration: none;
+    color: black;
 }
 
 .text-primary {
@@ -87,12 +90,17 @@
 }
 
 .issue-link {
-    color: #007bff;
+    color: #008aa8;
     text-decoration: none;
+    font-weight: normal;
 }
 
 .issue-link:hover {
-    text-decoration: underline;
+    text-decoration: none;
+}
+
+.issue-link:active {
+    color: black;
 }
 
 .new-issue-button {
