@@ -284,9 +284,9 @@ function ViewIssue() {
                 <p style={{ textAlign: 'left' }}>ISSUE</p>
                 <div className="issue-meta">
                     <div>
-                      Created by {issue.creador}
-                      <br />
-                      {formatDate(issue.data_creacio)}
+                        Created by <Link to={`/user/${issue.creador}`} className="username-link">{issue.creador}</Link>
+                        <br />
+                        {formatDate(issue.data_creacio)}
                     </div>
                 </div>
 
