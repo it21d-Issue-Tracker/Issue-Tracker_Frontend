@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../css/settingsFormPage.css';
-import {useAuth} from "../context/AuthContext.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 
 export default function SeverityForm({ isEdit }) {
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ export default function SeverityForm({ isEdit }) {
     if (isEdit) {
       fetch(`https://issue-tracker-c802.onrender.com/api/severity/${id}/`)
         .then(res => {
-          if (!res.ok) throw new Error('Error al cargar la severidad');
+          if (!res.ok) throw new Error('Failed to load severity');
           return res.json();
         })
         .then(data => {
@@ -29,7 +29,7 @@ export default function SeverityForm({ isEdit }) {
         })
         .catch(err => {
           console.error(err);
-          alert('Error al cargar la severidad');
+          alert('Failed to load severity');
         });
     }
   }, [id, isEdit]);
@@ -52,15 +52,15 @@ export default function SeverityForm({ isEdit }) {
 
       if (!res.ok) {
         const errorData = await res.json();
-        console.error('Error del servidor:', errorData);
-        alert(`Error al guardar los datos: ${JSON.stringify(errorData)}`);
+        console.error('Server error:', errorData);
+        alert(`Failed to save data: ${JSON.stringify(errorData)}`);
         return;
       }
 
       navigate('/settings/severities');
     } catch (err) {
       console.error(err);
-      alert('Error al conectar con el servidor');
+      alert('Failed to connect to the server');
     }
   };
 

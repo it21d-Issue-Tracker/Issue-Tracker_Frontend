@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../css/settingsFormPage.css';
-import {useAuth} from "../context/AuthContext.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 
 export default function TipusForm({ isEdit }) {
   const navigate = useNavigate();
@@ -10,18 +10,16 @@ export default function TipusForm({ isEdit }) {
   const [color, setColor] = useState('');
   const { getAuthHeaders } = useAuth();
 
-
-  const coloresPredefinidos = [
+  const predefinedColors = [
     '#ff5733', '#33ff57', '#3357ff',
     '#dc7633', '#f1c40f', '#8e44ad', '#1c2833'
   ];
 
   useEffect(() => {
     if (isEdit) {
-      fetch(`https://issue-tracker-c802.onrender.com/api/tipus/${id}/`, {
-      })
+      fetch(`https://issue-tracker-c802.onrender.com/api/tipus/${id}/`)
         .then(res => {
-          if (!res.ok) throw new Error('Error al cargar el tipus');
+          if (!res.ok) throw new Error('Failed to load the type');
           return res.json();
         })
         .then(data => {
@@ -30,40 +28,40 @@ export default function TipusForm({ isEdit }) {
         })
         .catch(err => {
           console.error(err);
-          alert('Error al cargar el tipus');
+          alert('Failed to load the type');
         });
     }
   }, [id, isEdit]);
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const payload = { name, color };
-  const url = isEdit
-    ? `https://issue-tracker-c802.onrender.com/api/tipus/${id}/`
-    : `https://issue-tracker-c802.onrender.com/api/tipus/`;
-  const method = isEdit ? 'PATCH' : 'POST';
+    const payload = { name, color };
+    const url = isEdit
+      ? `https://issue-tracker-c802.onrender.com/api/tipus/${id}/`
+      : `https://issue-tracker-c802.onrender.com/api/tipus/`;
+    const method = isEdit ? 'PATCH' : 'POST';
 
-  try {
-    const res = await fetch(url, {
-      method,
-      headers: getAuthHeaders(),
-      body: JSON.stringify(payload),
-    });
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: getAuthHeaders(),
+        body: JSON.stringify(payload),
+      });
 
-    if (!res.ok) {
-      const errorData = await res.json();
-      console.error('Error del servidor:', errorData);
-      alert(`Error al guardar los datos: ${JSON.stringify(errorData)}`);
-      return;
+      if (!res.ok) {
+        const errorData = await res.json();
+        console.error('Server error:', errorData);
+        alert(`Failed to save the data: ${JSON.stringify(errorData)}`);
+        return;
+      }
+
+      navigate('/settings/tipus');
+    } catch (err) {
+      console.error(err);
+      alert('Failed to connect to the server');
     }
-
-    navigate('/settings/tipus');
-  } catch (err) {
-    console.error(err);
-    alert('Error al conectar con el servidor');
-  }
-};
+  };
 
   const handleColorChange = (value) => {
     setColor(value);
@@ -88,7 +86,7 @@ const handleSubmit = async (e) => {
           <div className="caracteristica-container">
             <span className="caracteristica-label">Color:</span>
             <div className="caracteristica-select-container" style={{ flexWrap: 'wrap' }}>
-              {coloresPredefinidos.map((c, idx) => (
+              {predefinedColors.map((c, idx) => (
                 <label key={idx}>
                   <input
                     type="radio"
@@ -105,7 +103,7 @@ const handleSubmit = async (e) => {
                   type="radio"
                   name="color"
                   value={color}
-                  checked={!coloresPredefinidos.includes(color)}
+                  checked={!predefinedColors.includes(color)}
                   onChange={() => {}}
                 />
                 <input
