@@ -1,27 +1,42 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../css/SettingsTable.css';
+import { useAuth } from '../context/AuthContext';
+import SettingsDeleteModal from '../components/SettingsDeleteModal';
 
 const TipusList = () => {
   const [tipus, setTipus] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedType, setSelectedType] = useState(null);
+
+  const { getAuthHeaders } = useAuth();
+
+  const fetchTipus = async () => {
+    try {
+      const res = await fetch('https://issue-tracker-c802.onrender.com/api/tipus/', {
+        headers: getAuthHeaders()
+      });
+      if (!res.ok) throw new Error("Error fetching types");
+      const data = await res.json();
+      setTipus(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchTipus = async () => {
-      try {
-        const res = await fetch('https://issue-tracker-c802.onrender.com/api/tipus/');
-        if (!res.ok) throw new Error("Error fetching types");
-        const data = await res.json();
-        setTipus(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchTipus();
   }, []);
+
+  const openDeleteModal = (tip) => {
+    setSelectedType(tip);
+    setModalOpen(true);
+  };
 
   const styles = {
     content: {
@@ -71,7 +86,13 @@ const TipusList = () => {
                       <td>{tip.name}</td>
                       <td>
                         <Link to={`/settings/tipus/edit/${tip.id}`} title="Edit">✏️</Link>
-                        <Link to={`/settings/tipus/delete/${tip.id}`} title="Delete">❌</Link>
+                        <button
+                          onClick={() => openDeleteModal(tip)}
+                          title="Delete"
+                          style={{background: 'none', border: 'none', cursor: 'pointer', marginLeft: '0.5rem'}}
+                        >
+                          ❌
+                        </button>
                       </td>
                     </tr>
                   ))
@@ -85,6 +106,19 @@ const TipusList = () => {
           </div>
         )}
       </main>
+
+      <SettingsDeleteModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        itemId={selectedType?.id}
+        itemName={selectedType?.name}
+        entityType="type"
+        apiEndpoint="https://issue-tracker-c802.onrender.com/api/tipus/"
+        onDeleteSuccess={() => {
+          fetchTipus();
+          setModalOpen(false);
+        }}
+      />
     </>
   );
 };

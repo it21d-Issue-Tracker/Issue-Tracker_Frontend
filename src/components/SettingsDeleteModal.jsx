@@ -45,29 +45,32 @@ const SettingsDeleteModal = ({
         body: JSON.stringify({ sustituto: replacementId }),
       });
 
-      if (!response.ok) {
-        let errorMessage = `Error ${response.status}: No se pudo eliminar ${entityType}`;
-        try {
-          const contentType = response.headers.get('content-type');
+  if (!response.ok) {
+    let errorMessage = `Error ${response.status}: Failed to delete ${entityType}.`;
+    const contentType = response.headers.get('content-type');
+    const text = await response.text();
+    let combinedMessage = text;
 
-          if (contentType && contentType.includes('application/json')) {
-            const data = await response.json();
-            errorMessage = data?.detail || JSON.stringify(data);
-          } else {
-            const text = await response.text();
-            // Detectamos el caso de "Bug"
-            if (text.includes("You cannot delete")) {
-              errorMessage = `No puedes eliminar el tipus ${itemName}.`;
-            } else if (text && !text.trim().startsWith('<')) {
-              errorMessage = text;
-            }
-          }
-        } catch {
-          // dejamos el mensaje por defecto
+    try {
+      if (contentType?.includes('application/json')) {
+        const data = JSON.parse(text);
+        if (data?.detail || data?.error) {
+          combinedMessage = `${data.detail || data.error} ${text}`;
         }
-
-        throw new Error(errorMessage);
       }
+    } catch {
+      // Ignore JSON parse errors, keep using raw text
+    }
+
+    // Buscar mensaje específico si está en el texto combinado
+    if (combinedMessage.includes("You cannot delete")) {
+      errorMessage = `You cannot delete the ${entityType} "${itemName}".`;
+    } else if (combinedMessage && !combinedMessage.trim().startsWith('<')) {
+      errorMessage = combinedMessage;
+    }
+
+    throw new Error(errorMessage);
+  }
 
       onDeleteSuccess();
       onClose();

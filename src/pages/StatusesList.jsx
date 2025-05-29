@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../css/SettingsTable.css';
 import SettingsDeleteModal from '../components/SettingsDeleteModal';
+import { useAuth } from '../context/AuthContext';
 
 const StatusesList = () => {
   const [statuses, setStatuses] = useState([]);
@@ -10,9 +11,13 @@ const StatusesList = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState(null);
 
+  const { getAuthHeaders } = useAuth();
+
   const fetchStatuses = async () => {
     try {
-      const res = await fetch('https://issue-tracker-c802.onrender.com/api/statuses/');
+      const res = await fetch('https://issue-tracker-c802.onrender.com/api/statuses/', {
+        headers: getAuthHeaders(),
+      });
       if (!res.ok) throw new Error('Error fetching statuses');
       const data = await res.json();
       setStatuses(data);
@@ -27,17 +32,17 @@ const StatusesList = () => {
     fetchStatuses();
   }, []);
 
+  const openDeleteModal = (status) => {
+    setSelectedStatus(status);
+    setModalOpen(true);
+  };
+
   const styles = {
     content: {
       marginLeft: '360px',
       padding: '40px',
       maxWidth: '1200px',
     },
-  };
-
-  const openDeleteModal = (status) => {
-    setSelectedStatus(status);
-    setModalOpen(true);
   };
 
   return (
@@ -83,11 +88,11 @@ const StatusesList = () => {
                       <td>{status.slug}</td>
                       <td>{status.closed ? 'Yes' : 'No'}</td>
                       <td>
-                        <Link to={`/settings/status/edit/${status.id}`} title="Edit">✏️</Link>
+                        <Link to={`/settings/statuses/edit/${status.id}`} title="Edit">✏️</Link>
                         <button
                           onClick={() => openDeleteModal(status)}
                           title="Delete"
-                          style={{ background: 'none', border: 'none', cursor: 'pointer', marginLeft: '0.5rem' }}
+                          style={{background: 'none', border: 'none', cursor: 'pointer', marginLeft: '0.5rem'}}
                         >
                           ❌
                         </button>
@@ -112,7 +117,10 @@ const StatusesList = () => {
         itemName={selectedStatus?.name}
         entityType="status"
         apiEndpoint="https://issue-tracker-c802.onrender.com/api/statuses/"
-        onDeleteSuccess={fetchStatuses}
+        onDeleteSuccess={() => {
+          fetchStatuses();
+          setModalOpen(false);
+        }}
       />
     </>
   );

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../css/settingsFormPage.css';
-import {useAuth} from "../context/AuthContext.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 
 export default function PriorityForm({ isEdit }) {
   const navigate = useNavigate();
@@ -10,7 +10,7 @@ export default function PriorityForm({ isEdit }) {
   const [color, setColor] = useState('');
   const { getAuthHeaders } = useAuth();
 
-  const coloresPredefinidos = [
+  const predefinedColors = [
     '#ff5733', '#33ff57', '#3357ff',
     '#dc7633', '#f1c40f', '#8e44ad', '#1c2833'
   ];
@@ -19,7 +19,7 @@ export default function PriorityForm({ isEdit }) {
     if (isEdit) {
       fetch(`https://issue-tracker-c802.onrender.com/api/priorities/${id}/`, {})
         .then(res => {
-          if (!res.ok) throw new Error('Error al cargar la prioridad');
+          if (!res.ok) throw new Error('Failed to load priority');
           return res.json();
         })
         .then(data => {
@@ -28,7 +28,7 @@ export default function PriorityForm({ isEdit }) {
         })
         .catch(err => {
           console.error(err);
-          alert('Error al cargar la prioridad');
+          alert('Failed to load priority');
         });
     }
   }, [id, isEdit]);
@@ -51,15 +51,15 @@ export default function PriorityForm({ isEdit }) {
 
       if (!res.ok) {
         const errorData = await res.json();
-        console.error('Error del servidor:', errorData);
-        alert(`Error al guardar los datos: ${JSON.stringify(errorData)}`);
+        console.error('Server error:', errorData);
+        alert(`Failed to save data: ${JSON.stringify(errorData)}`);
         return;
       }
 
       navigate('/settings/priorities');
     } catch (err) {
       console.error(err);
-      alert('Error al conectar con el servidor');
+      alert('Failed to connect to the server');
     }
   };
 
@@ -86,7 +86,7 @@ export default function PriorityForm({ isEdit }) {
           <div className="caracteristica-container">
             <span className="caracteristica-label">Color:</span>
             <div className="caracteristica-select-container" style={{ flexWrap: 'wrap' }}>
-              {coloresPredefinidos.map((c, idx) => (
+              {predefinedColors.map((c, idx) => (
                 <label key={idx}>
                   <input
                     type="radio"
@@ -103,7 +103,7 @@ export default function PriorityForm({ isEdit }) {
                   type="radio"
                   name="color"
                   value={color}
-                  checked={!coloresPredefinidos.includes(color)}
+                  checked={!predefinedColors.includes(color)}
                   onChange={() => {}}
                 />
                 <input
