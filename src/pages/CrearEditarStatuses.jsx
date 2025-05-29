@@ -10,7 +10,7 @@ export default function CrearEditarStatus() {
   return (
     <div className="lightbox-create-edit">
       <div style={{ textAlign: 'right' }}>
-        <Link to="/settings/status" className="back-link">×</Link>
+        <Link to="/settings/statuses" className="back-link">×</Link>
       </div>
       <h2 className="title">{isEdit ? 'Edit Status' : 'New Status'}</h2>
       <StatusForm isEdit={isEdit} />

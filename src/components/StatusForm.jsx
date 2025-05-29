@@ -1,17 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../css/settingsFormPage.css';
-import {useAuth} from "../context/AuthContext.jsx";
+import { useAuth } from '../context/AuthContext.jsx';
 
 export default function StatusForm({ isEdit }) {
   const navigate = useNavigate();
   const { id } = useParams();
   const [name, setName] = useState('');
-  const [slug, setSlug] = useState('');
   const [color, setColor] = useState('');
   const [closed, setClosed] = useState(false);
   const { getAuthHeaders } = useAuth();
-
 
   const predefinedColors = [
     '#ff5733', '#33ff57', '#3357ff',
@@ -20,31 +18,31 @@ export default function StatusForm({ isEdit }) {
 
   useEffect(() => {
     if (isEdit) {
-      fetch(`https://issue-tracker-c802.onrender.com/api/status/${id}/`)
+      fetch(`https://issue-tracker-c802.onrender.com/api/statuses/${id}/`, {
+        headers: getAuthHeaders(),
+      })
         .then(res => {
-          if (!res.ok) throw new Error('Error al cargar el status');
+          if (!res.ok) throw new Error('Error loading status');
           return res.json();
         })
         .then(data => {
           setName(data.name);
-          setSlug(data.slug);
           setColor(data.color);
           setClosed(data.closed);
         })
         .catch(err => {
           console.error(err);
-          alert('Error al cargar el status');
+          alert('Error loading the status');
         });
     }
   }, [id, isEdit]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const payload = { name, slug, color, closed };
+    const payload = { name, color, closed };
     const url = isEdit
-      ? `https://issue-tracker-c802.onrender.com/api/status/${id}/`
-      : `https://issue-tracker-c802.onrender.com/api/status/`;
+      ? `https://issue-tracker-c802.onrender.com/api/statuses/${id}/`
+      : `https://issue-tracker-c802.onrender.com/api/statuses/`;
     const method = isEdit ? 'PATCH' : 'POST';
 
     try {
@@ -56,15 +54,15 @@ export default function StatusForm({ isEdit }) {
 
       if (!res.ok) {
         const errorData = await res.json();
-        console.error('Error del servidor:', errorData);
-        alert(`Error al guardar los datos: ${JSON.stringify(errorData)}`);
+        console.error('Server error:', errorData);
+        alert(`Error saving data: ${JSON.stringify(errorData)}`);
         return;
       }
 
-      navigate('/settings/status');
+      navigate('/settings/statuses');
     } catch (err) {
       console.error(err);
-      alert('Error al conectar con el servidor');
+      alert('Connection error');
     }
   };
 
@@ -86,16 +84,10 @@ export default function StatusForm({ isEdit }) {
               onChange={(e) => setName(e.target.value)}
               required
             />
-            <input
-              type="text"
-              name="slug"
-              placeholder="Slug"
-              maxLength="100"
-              value={slug}
-              onChange={(e) => setSlug(e.target.value)}
-              required
-            />
-            <label>
+          </fieldset>
+
+          <div style={{ marginTop: '12px', marginBottom: '20px' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <input
                 type="checkbox"
                 checked={closed}
@@ -103,7 +95,7 @@ export default function StatusForm({ isEdit }) {
               />
               Closed
             </label>
-          </fieldset>
+          </div>
 
           <div className="caracteristica-container">
             <span className="caracteristica-label">Color:</span>

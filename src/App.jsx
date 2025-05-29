@@ -1,6 +1,9 @@
 import './App.css';
 import Sidebar from './components/sidebar';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import Login from './pages/Login';
+import UserProfile from './pages/UserProfile';
 import ViewIssue from './pages/ViewIssue';
 import IssuesMenu from './pages/IssuesMenu';
 import CrearEditarIssue from "./pages/CrearEditarIssue.jsx";
@@ -17,11 +20,26 @@ import CrearEditarSeverity from "./pages/CrearEditarSeverities.jsx";
 import StatusesList from "./pages/StatusesList.jsx";
 import CrearEditarStatus from "./pages/CrearEditarStatuses.jsx";
 
+function ProtectedRoute({ children }) {
+    const { isAuthenticated, isLoading } = useAuth();
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
+    if (!isAuthenticated) {
+        return <Navigate to="/login" replace />;
+    }
+
+    return children;
+}
 
 function AppContent() {
     const location = useLocation();
+    const { isAuthenticated } = useAuth();
 
     const hideSidebarRoutes = [
+        /^\/login$/,
         /^\/issues\/new$/,
         /^\/issues\/[^/]+\/edit$/,
         /^\/issues\/[^/]+\/due_date$/,
@@ -47,28 +65,113 @@ function AppContent() {
 
     return (
         <div className="content">
-            {!shouldHideSidebar && <Sidebar />}
+            {!shouldHideSidebar && isAuthenticated && <Sidebar />}
             <Routes>
-                <Route path="/issues" element={<IssuesMenu />} />
-                <Route path="/issues/new" element={<CrearEditarIssue isEdit={false} />} />
-                <Route path="/issues/bulk-insert" element={<BulkInsertPage />} />
-                <Route path="/issues/:id" element={<ViewIssue />} />
-                <Route path="/issues/:id/edit" element={<CrearEditarIssue isEdit={true} />} />
-                <Route path="/issues/:id/due_date" element={<AfegirDueDate />} />
-                <Route path="/issues/:id/assign" element={<AfegirAssignat />} />
-                <Route path="/issues/:id/watchers" element={<AfegirWatchers />} />
-                <Route path="/settings/tipus" element={<TipusList />} />
-                <Route path="/settings/tipus/create" element={<CrearEditarTipus />} />
-                <Route path="/settings/tipus/edit/:id" element={<CrearEditarTipus />} />
-                <Route path="/settings/priorities" element={<PrioritiesList />} />
-                <Route path="/settings/priorities/create" element={<CrearEditarPriorities />} />
-                <Route path="/settings/priorities/edit/:id" element={<CrearEditarPriorities />} />
-                <Route path="/settings/severities" element={<SeveritiesList />} />
-                <Route path="/settings/severities/create" element={<CrearEditarSeverity />} />
-                <Route path="/settings/severities/edit/:id" element={<CrearEditarSeverity />} />
-                <Route path="/settings/statuses" element={<StatusesList />} />
-                <Route path="/settings/statuses/create" element={<CrearEditarStatus />} />
-                <Route path="/settings/statuses/edit/:id" element={<CrearEditarStatus />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/user/:username" element={<UserProfile />} />
+                <Route path="/" element={<Navigate to="/issues" replace />} />
+
+                {/* Protected Routes */}
+                <Route path="/issues" element={
+                    <ProtectedRoute>
+                        <IssuesMenu />
+                    </ProtectedRoute>
+                } />
+                <Route path="/issues/new" element={
+                    <ProtectedRoute>
+                        <CrearEditarIssue isEdit={false} />
+                    </ProtectedRoute>
+                } />
+                <Route path="/issues/bulk-insert" element={
+                    <ProtectedRoute>
+                        <BulkInsertPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/issues/:id" element={
+                    <ProtectedRoute>
+                        <ViewIssue />
+                    </ProtectedRoute>
+                } />
+                <Route path="/issues/:id/edit" element={
+                    <ProtectedRoute>
+                        <CrearEditarIssue isEdit={true} />
+                    </ProtectedRoute>
+                } />
+                <Route path="/issues/:id/due_date" element={
+                    <ProtectedRoute>
+                        <AfegirDueDate />
+                    </ProtectedRoute>
+                } />
+                <Route path="/issues/:id/assign" element={
+                    <ProtectedRoute>
+                        <AfegirAssignat />
+                    </ProtectedRoute>
+                } />
+                <Route path="/issues/:id/watchers" element={
+                    <ProtectedRoute>
+                        <AfegirWatchers />
+                    </ProtectedRoute>
+                } />
+                <Route path="/settings/tipus" element={
+                    <ProtectedRoute>
+                        <TipusList />
+                    </ProtectedRoute>
+                } />
+                <Route path="/settings/tipus/create" element={
+                    <ProtectedRoute>
+                        <CrearEditarTipus />
+                    </ProtectedRoute>
+                } />
+                <Route path="/settings/tipus/edit/:id" element={
+                    <ProtectedRoute>
+                        <CrearEditarTipus />
+                    </ProtectedRoute>
+                } />
+                <Route path="/settings/priorities" element={
+                    <ProtectedRoute>
+                        <PrioritiesList />
+                    </ProtectedRoute>
+                } />
+                <Route path="/settings/priorities/create" element={
+                    <ProtectedRoute>
+                        <CrearEditarPriorities />
+                    </ProtectedRoute>
+                } />
+                <Route path="/settings/priorities/edit/:id" element={
+                    <ProtectedRoute>
+                        <CrearEditarPriorities />
+                    </ProtectedRoute>
+                } />
+                <Route path="/settings/severities" element={
+                    <ProtectedRoute>
+                        <SeveritiesList />
+                    </ProtectedRoute>
+                } />
+                <Route path="/settings/severities/create" element={
+                    <ProtectedRoute>
+                        <CrearEditarSeverity />
+                    </ProtectedRoute>
+                } />
+                <Route path="/settings/severities/edit/:id" element={
+                    <ProtectedRoute>
+                        <CrearEditarSeverity />
+                    </ProtectedRoute>
+                } />
+                <Route path="/settings/statuses" element={
+                    <ProtectedRoute>
+                        <StatusesList />
+                    </ProtectedRoute>
+                } />
+                <Route path="/settings/statuses/create" element={
+                    <ProtectedRoute>
+                        <CrearEditarStatus />
+                    </ProtectedRoute>
+                } />
+                <Route path="/settings/statuses/edit/:id" element={
+                    <ProtectedRoute>
+                        <CrearEditarStatus />
+                    </ProtectedRoute>
+                } />
             </Routes>
         </div>
     );
@@ -76,8 +179,10 @@ function AppContent() {
 
 export default function App() {
     return (
-        <Router>
-            <AppContent />
+        <Router basename="/Issue-Tracker_Frontend">
+            <AuthProvider>
+                <AppContent />
+            </AuthProvider>
         </Router>
     );
 }
