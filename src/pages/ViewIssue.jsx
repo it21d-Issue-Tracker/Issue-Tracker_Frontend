@@ -26,7 +26,7 @@ function ViewIssue() {
 
     const [isDeleteIssueModalOpen, setIsDeleteIssueModalOpen] = useState(false);
     const [isDeleteAttachmentModalOpen, setIsDeleteAttachmentModalOpen] = useState(false);
-    const { getAuthHeaders } = useAuth();
+    const { getAuthHeaders, currentUser } = useAuth();
 
 
     const {
@@ -85,6 +85,13 @@ function ViewIssue() {
             fetchIssueData();
         }
     }, [id]);
+
+    const getAuthHeadersAttachments = () => {
+        if (!currentUser) return {};
+        return {
+            'Authorization': currentUser.apiKey,
+        };
+    };
 
     const fetchUserProfile = async (username) => {
         if (userProfiles[username]) {
@@ -174,7 +181,7 @@ function ViewIssue() {
         try {
             const response = await fetch('https://issue-tracker-c802.onrender.com/api/attachments/', {
                 method: 'POST',
-                headers: getAuthHeaders(),
+                headers: getAuthHeadersAttachments(),
                 body: formData
             });
 
