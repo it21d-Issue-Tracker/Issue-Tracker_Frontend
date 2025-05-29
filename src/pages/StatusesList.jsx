@@ -1,25 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../css/SettingsTable.css';
+import SettingsDeleteModal from '../components/SettingsDeleteModal';
 
 const StatusesList = () => {
   const [statuses, setStatuses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState(null);
+
+  const fetchStatuses = async () => {
+    try {
+      const res = await fetch('https://issue-tracker-c802.onrender.com/api/statuses/');
+      if (!res.ok) throw new Error('Error fetching statuses');
+      const data = await res.json();
+      setStatuses(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchStatuses = async () => {
-      try {
-        const res = await fetch('https://issue-tracker-c802.onrender.com/api/statuses/');
-        if (!res.ok) throw new Error('Error fetching statuses');
-        const data = await res.json();
-        setStatuses(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchStatuses();
   }, []);
 
@@ -31,9 +35,13 @@ const StatusesList = () => {
     },
   };
 
+  const openDeleteModal = (status) => {
+    setSelectedStatus(status);
+    setModalOpen(true);
+  };
+
   return (
     <>
-      {/* Sidebar */}
       <aside className="context-sidebar">
         <ul>
           <li><Link to="/settings/priorities">Priorities</Link></li>
@@ -43,7 +51,6 @@ const StatusesList = () => {
         </ul>
       </aside>
 
-      {/* Main content */}
       <main style={styles.content}>
         <header style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
           <h1>Statuses</h1>
@@ -77,7 +84,13 @@ const StatusesList = () => {
                       <td>{status.closed ? 'Yes' : 'No'}</td>
                       <td>
                         <Link to={`/settings/status/edit/${status.id}`} title="Edit">✏️</Link>
-                        <Link to={`/settings/status/delete/${status.id}`} title="Delete">❌</Link>
+                        <button
+                          onClick={() => openDeleteModal(status)}
+                          title="Delete"
+                          style={{ background: 'none', border: 'none', cursor: 'pointer', marginLeft: '0.5rem' }}
+                        >
+                          ❌
+                        </button>
                       </td>
                     </tr>
                   ))
@@ -91,6 +104,16 @@ const StatusesList = () => {
           </div>
         )}
       </main>
+
+      <SettingsDeleteModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        itemId={selectedStatus?.id}
+        itemName={selectedStatus?.name}
+        entityType="status"
+        apiEndpoint="https://issue-tracker-c802.onrender.com/api/statuses/"
+        onDeleteSuccess={fetchStatuses}
+      />
     </>
   );
 };
