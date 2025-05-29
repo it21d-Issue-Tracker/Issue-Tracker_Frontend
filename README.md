@@ -15,7 +15,7 @@ https://tree.taiga.io/project/mpuji6-it21d-issue-tracker/timeline
 
 ## Aplicació desplegada
 
-https://it21d-issue-tracker.github.io/Issue-Tracker_Frontend/login
+https://it21d-issue-tracker.github.io/Issue-Tracker_Frontend
 
 ## Instal·lació de l'entorn (Windows)
 
