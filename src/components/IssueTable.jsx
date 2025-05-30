@@ -9,7 +9,8 @@ import { useIssueMetadata } from '../hooks/useIssueMetadata';
 const IssueTable = ({
                       selectedFilters,
                       searchTerm,
-                      preloadedIssues = null
+                      preloadedIssues = null,
+                      spacing = true
                     }) => {
   const [issues, setIssues] = useState([]);
   const [sortBy, setSortBy] = useState('id');
@@ -220,75 +221,81 @@ const IssueTable = ({
     <div className="issue-list">
       <table>
         <thead>
-          <tr>
-            {[
-              { key: 'tipus', label: 'TYPE' },
-              { key: 'gravetat', label: 'SEVERITY' },
-              { key: 'prioritat', label: 'PRIORITY' },
-              { key: 'id', label: 'ISSUE' },
-              { key: 'estat', label: 'STATUS' },
-              { key: 'data_creacio', label: 'MODIFIED' },
-              { key: 'assignat', label: 'ASSIGN TO' }
-            ].map(({ key, label }) => (
+        <tr>
+          {[
+            {key: 'tipus', label: 'TYPE'},
+            {key: 'gravetat', label: 'SEVERITY'},
+            {key: 'prioritat', label: 'PRIORITY'},
+            {key: 'id', label: 'ISSUE'},
+            {key: 'estat', label: 'STATUS'},
+            {key: 'data_creacio', label: 'MODIFIED'},
+            {key: 'assignat', label: 'ASSIGN TO'}
+          ].map(({key, label}) => (
               <th
-                key={key}
-                onClick={() => handleSort(key)}
-                style={{ cursor: 'pointer' }}
+                  key={key}
+                  onClick={() => handleSort(key)}
+                  style={{cursor: 'pointer'}}
               >
                 {label} {renderSortIcons(key)}
               </th>
-            ))}
-          </tr>
+          ))}
+        </tr>
         </thead>
         <tbody>
-          {issuesToRender.length > 0 ? (
+        {issuesToRender.length > 0 ? (
             issuesToRender.map(issue => (
-              <tr key={issuesToRender.id}>
-                <td>
-                  <span
-                    className="dot"
-                    style={{ backgroundColor: getColorByName(tipus, issue.tipus) }}
-                  />
-                </td>
-                <td>
-                  <span
-                    className="dot"
-                    style={{ backgroundColor: getColorByName(gravetat, issue.gravetat) }}
-                  />
-                </td>
-                <td>
-                  <span
-                    className="dot"
-                    style={{ backgroundColor: getColorByName(prioritat, issue.prioritat) }}
-                  />
-                </td>
-                <td>
-                  <Link to={`/issues/${issue.id}`} className="issue-link">
-                    #{String(issue.id).slice(0, 5)}
-                  </Link>{' '}
-                  {issue.subject}
-                </td>
-                <td>{issue.estat}</td>
-                <td>{new Date(issue.data_creacio).toLocaleDateString()}</td>
-                <td>
-                  {issue.assignat && usersCache[issue.assignat]?.profile_picture_url ? (
-                    <span className="assign-avatars">
-                      <img
-                        src={usersCache[issue.assignat].profile_picture_url}
-                        alt={issue.assignat}
+                <React.Fragment key={issue.id}>
+                  <tr>
+                    <td>
+                      <span
+                          className="dot"
+                          style={{backgroundColor: getColorByName(tipus, issue.tipus)}}
                       />
-                    </span>
-                  ) : (
-                    issue.assignat || 'Unassigned'
+                    </td>
+                    <td>
+                      <span
+                          className="dot"
+                          style={{backgroundColor: getColorByName(gravetat, issue.gravetat)}}
+                      />
+                    </td>
+                    <td>
+                      <span
+                          className="dot"
+                          style={{backgroundColor: getColorByName(prioritat, issue.prioritat)}}
+                      />
+                    </td>
+                    <td>
+                      <Link to={`/issues/${issue.id}`} className="issue-link">
+                        #{String(issue.id).slice(0, 5)}
+                      </Link>{' '}
+                      {issue.subject}
+                    </td>
+                    <td>{issue.estat}</td>
+                    <td>{new Date(issue.data_creacio).toLocaleDateString()}</td>
+                    <td>
+                      {issue.assignat && usersCache[issue.assignat]?.profile_picture_url ? (
+                          <span className="assign-avatars">
+                            <img
+                                src={usersCache[issue.assignat].profile_picture_url}
+                                alt={issue.assignat}
+                            />
+                          </span>
+                          ) : (
+                              issue.assignat || 'Unassigned'
+                          )}
+                    </td>
+                  </tr>
+                  {spacing && (
+                      <tr style={{ backgroundColor: '#f9f9fb', height: '7px' }}>
+                      </tr>
                   )}
-                </td>
-              </tr>
+                </React.Fragment>
             ))
-          ) : (
+        ) : (
             <tr>
               <td colSpan="7">No issues available.</td>
             </tr>
-          )}
+        )}
         </tbody>
       </table>
     </div>

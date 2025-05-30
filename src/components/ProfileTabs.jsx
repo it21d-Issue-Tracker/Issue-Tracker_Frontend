@@ -29,6 +29,7 @@ export default function ProfileTabs({ assignedIssues, watchedIssues, comments}) 
                 preloadedIssues={assignedIssues}
                 showSorting={false}
                 emptyMessage="No assigned issues found."
+                spacing={false}
             />
         </div>
     );
@@ -39,6 +40,7 @@ export default function ProfileTabs({ assignedIssues, watchedIssues, comments}) 
                 preloadedIssues={watchedIssues}
                 showSorting={false}
                 emptyMessage="No watched issues found."
+                spacing={false}
             />
         </div>
     );
