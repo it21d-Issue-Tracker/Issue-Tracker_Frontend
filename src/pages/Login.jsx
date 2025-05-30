@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useAnimatedCounter } from '../hooks/useAnimatedCounter';
 import '../css/login.css';
 
 export default function Login() {
@@ -88,6 +89,28 @@ export default function Login() {
             </div>
         );
     }
+    const AnimatedUserStats = ({ user }) => {
+        const animatedAssigned = useAnimatedCounter(user.assigned_issues_count || 0, 800);
+        const animatedWatched = useAnimatedCounter(user.watched_issues_count || 0, 900);
+        const animatedComments = useAnimatedCounter(user.comments_count || 0, 1000);
+
+        return (
+            <div className="user-stats">
+                <div className="stat-item">
+                    <span className="stat-number">{animatedAssigned}</span>
+                    <span className="stat-label">Assigned</span>
+                </div>
+                <div className="stat-item">
+                    <span className="stat-number">{animatedWatched}</span>
+                    <span className="stat-label">Watching</span>
+                </div>
+                <div className="stat-item">
+                    <span className="stat-number">{animatedComments}</span>
+                    <span className="stat-label">Comments</span>
+                </div>
+            </div>
+        );
+    };
 
     return (
         <div className="login-container">
@@ -148,20 +171,7 @@ export default function Login() {
                                             </div>
                                         )}
 
-                                        <div className="user-stats">
-                                            <div className="stat-item">
-                                                <span className="stat-number">{user.assigned_issues_count || 0}</span>
-                                                <span className="stat-label">Assigned</span>
-                                            </div>
-                                            <div className="stat-item">
-                                                <span className="stat-number">{user.watched_issues_count || 0}</span>
-                                                <span className="stat-label">Watching</span>
-                                            </div>
-                                            <div className="stat-item">
-                                                <span className="stat-number">{user.comments_count || 0}</span>
-                                                <span className="stat-label">Comments</span>
-                                            </div>
-                                        </div>
+                                        <AnimatedUserStats user={user} />
                                     </div>
 
                                     <div className="user-card-footer">

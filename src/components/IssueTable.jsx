@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import axios from 'axios';
 import '../css/issuesTable.css';
 import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
@@ -6,7 +6,11 @@ import { Link } from 'react-router-dom';
 import qs from 'qs';
 import { useIssueMetadata } from '../hooks/useIssueMetadata';
 
-const IssueTable = ({ selectedFilters, searchTerm }) => {
+const IssueTable = ({
+                      selectedFilters,
+                      searchTerm,
+                      preloadedIssues = null
+                    }) => {
   const [issues, setIssues] = useState([]);
   const [sortBy, setSortBy] = useState('id');
   const [sortOrder, setSortOrder] = useState('asc');
@@ -22,7 +26,109 @@ const IssueTable = ({ selectedFilters, searchTerm }) => {
     getColorByName
   } = useIssueMetadata();
 
+  const getMetadataOrder = (metadataArray, value) => {
+    if (!Array.isArray(metadataArray) || value == null) return -1;
+
+    const byName = metadataArray.findIndex(item => item.name === value);
+    if (byName !== -1) return byName;
+
+    const idNum = Number(value);
+    if (!isNaN(idNum)) {
+      const byId = metadataArray.findIndex(item => item.id === idNum);
+      if (byId !== -1) return byId;
+    }
+
+    return -1;
+  };
+
+  const sortedIssues = useMemo(() => {
+    if (!preloadedIssues) return issues;
+
+    return [...preloadedIssues].sort((a, b) => {
+      let aVal, bVal;
+
+      switch (sortBy) {
+        case 'tipus':
+          aVal = getMetadataOrder(tipus, a.tipus);
+          bVal = getMetadataOrder(tipus, b.tipus);
+          break;
+        case 'gravetat':
+          aVal = getMetadataOrder(gravetat, a.gravetat);
+          bVal = getMetadataOrder(gravetat, b.gravetat);
+          break;
+        case 'prioritat':
+          aVal = getMetadataOrder(prioritat, a.prioritat);
+          bVal = getMetadataOrder(prioritat, b.prioritat);
+          break;
+        case 'estat':
+          aVal = getMetadataOrder(estat, a.estat);
+          bVal = getMetadataOrder(estat, b.estat);
+          break;
+        case 'id':
+          aVal = a.id;
+          bVal = b.id;
+          break;
+        case 'data_creacio':
+          aVal = new Date(a.data_creacio);
+          bVal = new Date(b.data_creacio);
+          break;
+        case 'assignat':
+          aVal = a.assignat || '';
+          bVal = b.assignat || '';
+          break;
+        default:
+          aVal = a[sortBy];
+          bVal = b[sortBy];
+      }
+
+      if (aVal == null && bVal == null) return 0;
+      if (aVal == null) return 1;
+      if (bVal == null) return -1;
+
+      let comparison = 0;
+      if (aVal < bVal) comparison = -1;
+      else if (aVal > bVal) comparison = 1;
+
+      return sortOrder === 'asc' ? comparison : -comparison;
+    });
+  }, [preloadedIssues, sortBy, sortOrder, tipus, gravetat, prioritat, estat, issues]);
+
   useEffect(() => {
+    if (preloadedIssues) {
+      setIssues(preloadedIssues);
+
+      const usernames = Array.from(new Set(
+          preloadedIssues
+              .map(issue => issue.assignat)
+              .filter(username => username && !usersCache[username])
+      ));
+
+      if (usernames.length > 0) {
+        const loadUsers = async () => {
+          const usersData = {};
+          await Promise.all(
+              usernames.map(async username => {
+                try {
+                  const res = await axios.get(
+                      `https://issue-tracker-c802.onrender.com/api/usuaris/${username}`
+                  );
+                  usersData[username] = res.data;
+                } catch (err) {
+                  console.error(`Error loading user ${username}:`, err);
+                  usersData[username] = null;
+                }
+              })
+          );
+          setUsersCache(prev => ({ ...prev, ...usersData }));
+        };
+        loadUsers().then(() => {});
+      }
+    }
+  }, [preloadedIssues, usersCache]);
+
+  useEffect(() => {
+    if (preloadedIssues) return; // Don't fetch if we have preloaded issues
+
     const fetchIssues = async () => {
       try {
         setLoading(true);
@@ -82,7 +188,7 @@ const IssueTable = ({ selectedFilters, searchTerm }) => {
     };
 
     fetchIssues();
-  }, [sortBy, sortOrder, selectedFilters, searchTerm]);
+  }, [sortBy, sortOrder, selectedFilters, searchTerm, preloadedIssues, usersCache]);
 
   const handleSort = column => {
     if (sortBy === column) {
@@ -107,6 +213,8 @@ const IssueTable = ({ selectedFilters, searchTerm }) => {
   if (loading || loadingMeta) {
     return <p>Loading issues…</p>;
   }
+
+  const issuesToRender = preloadedIssues ? sortedIssues : issues;
 
   return (
     <div className="issue-list">
@@ -133,9 +241,9 @@ const IssueTable = ({ selectedFilters, searchTerm }) => {
           </tr>
         </thead>
         <tbody>
-          {issues.length > 0 ? (
-            issues.map(issue => (
-              <tr key={issue.id}>
+          {issuesToRender.length > 0 ? (
+            issuesToRender.map(issue => (
+              <tr key={issuesToRender.id}>
                 <td>
                   <span
                     className="dot"
