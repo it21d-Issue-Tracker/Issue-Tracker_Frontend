@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
+import ProfileSidebar from '../components/ProfileSidebar';
+import ProfileTabs from '../components/ProfileTabs';
+import '../css/userProfile.css';
 
 export default function UserProfile() {
     const { username } = useParams();
@@ -17,6 +20,20 @@ export default function UserProfile() {
     const handleLogout = () => {
         logout();
         navigate('/login');
+    };
+
+    const handleBioUpdate = (newBio) => {
+        setUserData(prevData => ({
+            ...prevData,
+            biografia: newBio
+        }));
+    };
+
+    const handleProfilePictureUpdate = (newProfilePictureUrl) => {
+        setUserData(prevData => ({
+            ...prevData,
+            profile_picture_url: newProfilePictureUrl
+        }));
     };
 
     useEffect(() => {
@@ -37,10 +54,6 @@ export default function UserProfile() {
                     'Authorization': apiKey,
                     'Content-Type': 'application/json'
                 };
-
-                console.log('Fetching data for user:', username);
-                console.log('Using API key:', apiKey);
-                console.log('Current user:', currentUser);
 
                 const userResponse = await axios.get(
                     `https://issue-tracker-c802.onrender.com/api/usuaris/${username}/`,
@@ -80,75 +93,46 @@ export default function UserProfile() {
     }, [username, getApiKey, currentUser, isLoading]);
 
     if (isLoading) {
-        return <div style={{ padding: '20px' }}>Loading authentication...</div>;
+        return <div className="profile-loading">Loading authentication...</div>;
     }
 
     if (!currentUser) {
-        return <div style={{ padding: '20px' }}>Please login first</div>;
+        return <div className="profile-error">Please login first</div>;
     }
 
     if (loading) {
-        return <div style={{ padding: '20px' }}>Loading user data...</div>;
+        return <div className="profile-loading">Loading user data...</div>;
     }
 
     if (error) {
         return (
-            <div style={{ padding: '20px', color: 'red' }}>
+            <div className="profile-error-container">
                 <h1>Error</h1>
                 <p>{error}</p>
-                <div style={{ marginTop: '20px' }}>
-                    <p><strong>Debug Info:</strong></p>
-                    <p>Current User: {currentUser ? JSON.stringify(currentUser) : 'null'}</p>
-                    <p>API Key: {getApiKey() || 'null'}</p>
-                    <p>Auth Loading: {isLoading.toString()}</p>
-                </div>
             </div>
         );
     }
 
     return (
-        <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                <h1>User Profile: {username}</h1>
-                <button
-                    onClick={handleLogout}
-                    style={{
-                        padding: '10px 20px',
-                        backgroundColor: '#dc3545',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        fontSize: '14px'
-                    }}
-                >
-                    Logout
-                </button>
-            </div>
-
-            <h2>Basic Info</h2>
-            <pre style={{ background: '#f5f5f5', padding: '10px', overflow: 'auto' }}>
-        {JSON.stringify(userData, null, 2)}
-      </pre>
-
-            <h2>Assigned Issues ({assignedIssues.length})</h2>
-            <pre style={{ background: '#f5f5f5', padding: '10px', overflow: 'auto' }}>
-        {JSON.stringify(assignedIssues, null, 2)}
-      </pre>
-
-            <h2>Watched Issues ({watchedIssues.length})</h2>
-            <pre style={{ background: '#f5f5f5', padding: '10px', overflow: 'auto' }}>
-        {JSON.stringify(watchedIssues, null, 2)}
-      </pre>
-
-            <h2>Comments ({comments.length})</h2>
-            <pre style={{ background: '#f5f5f5', padding: '10px', overflow: 'auto' }}>
-        {JSON.stringify(comments, null, 2)}
-      </pre>
-
-            <div style={{ marginTop: '20px' }}>
-                <p><strong>Current logged user:</strong> {currentUser.username}</p>
-                <p><strong>API Key being used:</strong> {getApiKey()}</p>
+        <div className="profile-container">
+            <div className="profile-layout">
+                <ProfileSidebar
+                    userData={userData}
+                    assignedIssues={assignedIssues}
+                    watchedIssues={watchedIssues}
+                    comments={comments}
+                    currentUser={currentUser}
+                    isOwnProfile={currentUser?.username === username}
+                    onLogout={handleLogout}
+                    onBioUpdate={handleBioUpdate}
+                    onProfilePictureUpdate={handleProfilePictureUpdate}
+                />
+                <ProfileTabs
+                    assignedIssues={assignedIssues}
+                    watchedIssues={watchedIssues}
+                    comments={comments}
+                    currentUser={currentUser}
+                />
             </div>
         </div>
     );
