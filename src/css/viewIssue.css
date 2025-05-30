@@ -445,7 +445,7 @@ hr {
     margin-left: 20px;
 }
 
-.comment-text {
+.comment-text-issue {
   height: 4.5em;
   max-height: 4.5em;
   overflow-y: auto;

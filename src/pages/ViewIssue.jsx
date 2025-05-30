@@ -379,7 +379,7 @@ function ViewIssue() {
                                                     <strong className="username">{comentari.autor}</strong>
                                                     <span className="comment-date">{formatCommentDate(comentari.data)}</span>
                                                 </div>
-                                                <div className="comment-text">
+                                                <div className="comment-text-issue">
                                                     {comentari.text}
                                                 </div>
                                             </div>
